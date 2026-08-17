@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events — LiveWire 4.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="l">Live</span><span class="w">Wire</span><span class="ver">4.0</span>
+    </a>
+    <nav class="primary-nav">
+      <a href="index.html">Home</a>
+      <a href="events.html">Events</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="registration.html">Registration</a>
+      <a href="recap.html">2026 Recap</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">12 events · 4 tracks</span>
+      <h1>Every event, every rule.</h1>
+      <p>Open an event to see class eligibility, format, prelim and final round rules, and how judges score it. Themes, exact dates and event heads are still being finalised and are marked below.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="filter-row">
+        <button class="filter-btn is-active" data-filter="all">All events</button>
+        <button class="filter-btn" data-filter="coding">Coding</button>
+        <button class="filter-btn" data-filter="gaming">Gaming</button>
+        <button class="filter-btn" data-filter="designing">Designing</button>
+        <button class="filter-btn" data-filter="innovation">Innovation</button>
+      </div>
+
+      <div class="event-list">
+
+        <!-- HackerRank -->
+        <div class="event-item reveal" data-category="coding">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Coding</span>
+              <div>
+                <h3>HackerRank — Hackathon 2027</h3>
+                <div class="meta">Class IX–XII · Online · 1 participant</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>Solve problems in Python 3 on HackerRank under a single online round. Accuracy, efficiency and fair play are scored directly; AI tools or shared solutions mean immediate disqualification.</p>
+              <div class="cols">
+                <div>
+                  <h4>Format</h4>
+                  <ul>
+                    <li>Single-round, entirely online competitive programming event.</li>
+                    <li>Python 3 only — other languages or older versions aren't evaluated.</li>
+                    <li>Participants need a registered, active HackerRank account beforehand.</li>
+                    <li>Contest link shared on Discord 24 hours before the event.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Judged on</h4>
+                  <ul>
+                    <li>Test cases passed against predefined cases.</li>
+                    <li>Efficiency — exceeding time/memory limits fails the case even if logic is correct.</li>
+                    <li>Tie-breaker: fastest correct submission (including penalties) ranks higher.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- APPetite -->
+        <div class="event-item reveal" data-category="coding">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Coding</span>
+              <div>
+                <h3>APPetite — App Creation</h3>
+                <div class="meta">Class IX–XII · Online + Offline · 2 participants</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>Build an app on any development platform that solves a real problem tied to the event theme. AI may be used via APIs.</p>
+              <div class="cols">
+                <div>
+                  <h4>Prelim round</h4>
+                  <ul>
+                    <li>Submit the APK, source code, and a max 2-minute explainer video.</li>
+                    <li>Folder name format: schoolID_eventname.</li>
+                    <li>Top five teams advance to the final round.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Final round (offline)</h4>
+                  <ul>
+                    <li>10-minute presentation explaining working, design and code.</li>
+                    <li>A PowerPoint summarising the idea and code is required.</li>
+                    <li>Judged on functionality, UI, code quality, backend, APIs, innovation and creativity.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="blank-note">Theme not yet finalised.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Sandbox Mania -->
+        <div class="event-item reveal" data-category="coding">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Coding</span>
+              <div>
+                <h3>Sandbox Mania — Scratch</h3>
+                <div class="meta">Class VI–VIII · Online + Offline · 1 participant</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>"Dream it. Scratch it. Build it." Design and code an original game in Scratch 3.0, built entirely within the editor.</p>
+              <div class="cols">
+                <div>
+                  <h4>Prelim round</h4>
+                  <ul>
+                    <li>Game needs a start, a core mechanic, and an end — advanced logic expected.</li>
+                    <li>Remixed projects or uncredited scripts = disqualification.</li>
+                    <li>Submit the project file plus a 2-minute video walking through the logic.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Final round (offline)</h4>
+                  <ul>
+                    <li>Top five teams get 60 minutes to build a prototype around an assigned topic.</li>
+                    <li>Judged on relevance, originality, gameplay/mechanics, and UX.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Ascension -->
+        <div class="event-item reveal" data-category="gaming">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Gaming</span>
+              <div>
+                <h3>Ascension — E-sports Tournament</h3>
+                <div class="meta">Class IX–XII · Online · 4–5 participants</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>"Battle. Race. Outplay." An inter-school esports tournament across Valorant, Rocket League and BGMI — fully online.</p>
+              <div class="cols">
+                <div>
+                  <h4>Valorant</h4>
+                  <ul>
+                    <li>Team of 5. Swiftplay prelims, single elimination.</li>
+                    <li>Semis and finals run as custom matches, knockout bracket.</li>
+                    <li>Map selection before matches; stable internet required.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Rocket League &amp; BGMI</h4>
+                  <ul>
+                    <li>Rocket League: team of 4, single-match knockout, overtime breaks ties.</li>
+                    <li>BGMI: squad of 4, three matches in custom rooms, ranked by total points.</li>
+                    <li>Hacks or unfair tools = disqualification across all titles.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Dynamic Racing Showdown -->
+        <div class="event-item reveal" data-category="gaming">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Gaming</span>
+              <div>
+                <h3>Dynamic Racing Showdown — Obstacle Race</h3>
+                <div class="meta">Class IX–XII · Online + Offline · 2 participants</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>"Build. Race. Own the track." Teams design and race a wireless chassis through an obstacle course, testing precision, power and control.</p>
+              <div class="cols">
+                <div>
+                  <h4>Build rules</h4>
+                  <ul>
+                    <li>Max weight 3 kg, dimensions 30×20×15 cm (L×W×H).</li>
+                    <li>Must be wireless — no wired control permitted.</li>
+                    <li>Prelim: submit a video demo explaining chassis functions and performance.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Final round (offline)</h4>
+                  <ul>
+                    <li>Three rounds: Round 1, semis, finals — lap times recorded each round.</li>
+                    <li>Track-limit penalties: green +5s, yellow +7s, red +10s.</li>
+                    <li>Only 2 members per team may enter the arena per round.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Paradox Palette -->
+        <div class="event-item reveal" data-category="designing">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Designing</span>
+              <div>
+                <h3>Paradox Palette — Canva Poster</h3>
+                <div class="meta">Class VI–VIII · Online + Offline · 1 participant</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>"Poster the cosmos." An original poster design, made in Canva without using pre-built Canva templates.</p>
+              <div class="cols">
+                <div>
+                  <h4>Prelim round</h4>
+                  <ul>
+                    <li>Poster must be original and expressive; theme must stay clearly evident.</li>
+                    <li>Canva templates strictly prohibited.</li>
+                    <li>Submit as 1080×1920 .png, plus the editable Canva link.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Final round (offline)</h4>
+                  <ul>
+                    <li>Top five teams get a lottery-assigned theme and 60 minutes to design.</li>
+                    <li>Judged on relevance, composition, clarity, innovation and overall impact.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="blank-note">Theme not yet finalised.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Aperture Alchemy -->
+        <div class="event-item reveal" data-category="designing">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Designing</span>
+              <div>
+                <h3>Aperture Alchemy — Photography</h3>
+                <div class="meta">Class IX–XII · Online · 1 participant</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>"Turn moments into visual magic." One original, uncaptioned-but-titled photograph, no software edits.</p>
+              <div class="cols">
+                <div>
+                  <h4>Rules</h4>
+                  <ul>
+                    <li>Single online round — one original image plus a caption.</li>
+                    <li>No editing software or tools of any kind.</li>
+                    <li>Always ask permission before photographing people; respect declines.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Judged on</h4>
+                  <ul>
+                    <li>Originality and creativity.</li>
+                    <li>Relevance to the topic and quality of content.</li>
+                    <li>Visual appeal — top three invited to the Valedictory Ceremony.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Frame by Frame -->
+        <div class="event-item reveal" data-category="designing">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Designing</span>
+              <div>
+                <h3>Frame by Frame — Film Making</h3>
+                <div class="meta">Class IX–XII · Online + Offline · 4 participants</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>"Stories in motion." An original short film, 8–10 minutes including credits, may be bilingual.</p>
+              <div class="cols">
+                <div>
+                  <h4>Prelim round</h4>
+                  <ul>
+                    <li>Theme interpretation can vary by genre, but must stay evident.</li>
+                    <li>Upload unlisted on YouTube; submit the link to the host school.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Final round (offline)</h4>
+                  <ul>
+                    <li>Top eight teams present in front of judges, followed by Q&amp;A.</li>
+                    <li>Judged on originality, relevance, quality, cinematography and story impact.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="blank-note">Theme not yet finalised.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Sound Bytes -->
+        <div class="event-item reveal" data-category="designing">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Designing</span>
+              <div>
+                <h3>Sound Bytes — Blind Film</h3>
+                <div class="meta">Class IX–XII · Online + Offline · 3 participants</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>"Paint pictures with sound." Same original short-film format as Frame by Frame, built around audio storytelling — 8–10 minutes, may be bilingual.</p>
+              <div class="cols">
+                <div>
+                  <h4>Prelim round</h4>
+                  <ul>
+                    <li>Original and creative; theme must be evident regardless of genre.</li>
+                    <li>Upload unlisted on YouTube; submit the link to the host school.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Final round (offline)</h4>
+                  <ul>
+                    <li>Top six teams present in front of judges, followed by Q&amp;A.</li>
+                    <li>Judged on originality, relevance, quality and story impact.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="blank-note">Theme not yet finalised.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Aenigma Syntax -->
+        <div class="event-item reveal" data-category="innovation">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Innovation</span>
+              <div>
+                <h3>Aenigma Syntax — Cryptic Hunt</h3>
+                <div class="meta">Class IX–XII · Online · 2 participants</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>"Decode. Logic. Conquer. Triumph." An interactive online cryptic hunt — six levels, each with 2–3 sublevels, solved by searching the web and decoding ciphers.</p>
+              <div class="cols">
+                <div>
+                  <h4>Format</h4>
+                  <ul>
+                    <li>Single round, timebound — link shared on Discord, timer starts immediately.</li>
+                    <li>No collaboration with other competitors.</li>
+                    <li>Up to 5 clues per level, each adding 15 minutes to the timer.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Rules</h4>
+                  <ul>
+                    <li>Winner: fastest finish or most levels cleared.</li>
+                    <li>No trespassing on private online property.</li>
+                    <li>Cite sources when using search engines or online tools to solve levels.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Venture Verse -->
+        <div class="event-item reveal" data-category="innovation">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Innovation</span>
+              <div>
+                <h3>Venture Verse — Entrepreneurship</h3>
+                <div class="meta">Class IX–XII · Online + Offline · 3 participants</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>"Pitch future-shaping ideas." Build a working website prototype for a business idea, incorporating open-source LLMs/SLMs or generative AI if relevant.</p>
+              <div class="cols">
+                <div>
+                  <h4>Prelim round</h4>
+                  <ul>
+                    <li>Submit a 5–6 minute video covering business model and profitability.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Final round (offline)</h4>
+                  <ul>
+                    <li>Top 5 teams pitch for 10–15 minutes in front of judges.</li>
+                    <li>The website prototype must present all business factors across separate pages.</li>
+                    <li>Judged on originality, business model, revenue potential and pitch quality.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="blank-note">Theme not yet finalised.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Quiz Quotient -->
+        <div class="event-item reveal" data-category="innovation">
+          <details>
+            <summary class="event-summary">
+              <span class="tag">Innovation</span>
+              <div>
+                <h3>Quiz Quotient — Tech Quiz</h3>
+                <div class="meta">Class VI–VIII · Online + Offline · 1 participant</div>
+              </div>
+              <span class="chev">+</span>
+            </summary>
+            <div class="event-body">
+              <p>"Outthink, outquiz, outshine." A camera-on, solo tech quiz — 30 questions in 45 minutes for the prelim round.</p>
+              <div class="cols">
+                <div>
+                  <h4>Prelim round</h4>
+                  <ul>
+                    <li>Participant must be alone with camera on throughout.</li>
+                    <li>Collaboration of any kind = immediate disqualification.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Final round (offline)</h4>
+                  <ul>
+                    <li>Rapid-fire round — highest score across 20 questions wins.</li>
+                    <li>Judged on creativity, detailing of answers, and clarity of interpretation.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="brand" style="margin-bottom:10px;">
+          <span class="l">Live</span><span class="w">Wire</span><span class="ver">4.0</span>
+        </a>
+        <p style="font-size:14px; max-width:32ch;">BGS International Public School, Sector 5, Dwarka, New Delhi.</p>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <a href="events.html">Events</a>
+        <a href="timeline.html">Timeline</a>
+        <a href="registration.html">Registration</a>
+        <a href="recap.html">2026 Recap</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Discord</a>
+        <a href="#">YouTube</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© LiveWire 4.0 — BGS International Public School</span>
+      <span>Charged for change, wired for success.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
