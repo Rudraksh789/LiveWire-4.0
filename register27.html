@@ -1092,17 +1092,25 @@
   <!-- Error Modal Overlay -->
   <div class="modal-overlay" id="errorOverlay">
     <div class="modal-card" style="text-align: center; padding: 48px 32px; max-width: 480px;">
-      <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(255,95,158,0.15); border: 1.5px solid var(--spark); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
+      <div
+        style="width: 72px; height: 72px; border-radius: 50%; background: rgba(255,95,158,0.15); border: 1.5px solid var(--spark); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
         <svg viewBox="0 0 24 24" style="width: 36px; height: 36px; color: var(--spark);">
-          <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path>
+          <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path>
         </svg>
       </div>
-      <h3 style="font-family: var(--display); font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 16px;">Submission Failed</h3>
-      <p style="color: var(--ink-mute); margin-bottom: 36px; line-height: 1.5;">We couldn't save your registration. This might be a connection issue or the Firebase database isn't configured yet.</p>
-      
+      <h3
+        style="font-family: var(--display); font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 16px;">
+        Submission Failed</h3>
+      <p style="color: var(--ink-mute); margin-bottom: 36px; line-height: 1.5;">We couldn't save your registration. This
+        might be a connection issue or the Firebase database isn't configured yet.</p>
+
       <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-        <button class="btn-submit" onclick="window.location.href='index.html'" style="background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 12px 24px;">Return to Home</button>
-        <button class="btn-submit" onclick="document.getElementById('errorOverlay').classList.remove('is-active')" style="padding: 12px 24px;">Try Again</button>
+        <button class="btn-submit" onclick="window.location.href='index.html'"
+          style="background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 12px 24px;">Return
+          to Home</button>
+        <button class="btn-submit" onclick="document.getElementById('errorOverlay').classList.remove('is-active')"
+          style="padding: 12px 24px;">Try Again</button>
       </div>
     </div>
   </div>
@@ -1145,13 +1153,13 @@
     try {
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
-      
+
       // Export functions globally so main script can use them
       window.firebaseDb = db;
       window.firebaseCollection = collection;
       window.firebaseAddDoc = addDoc;
       window.firebaseTimestamp = serverTimestamp;
-    } catch(e) {
+    } catch (e) {
       console.error("Firebase init failed:", e);
     }
   </script>
@@ -1275,7 +1283,7 @@
         } else {
           tempData = [];
           for (let i = 0; i < ev.participants; i++) {
-            tempData.push({ fullName: '', phone: '', class: '', section: '', email: '' });
+            tempData.push({ fullName: '', phone: '', class: '', section: '', email: '', discordId: '', inGameId: '' });
           }
         }
 
@@ -1329,6 +1337,8 @@
 
         // Fields
         const data = tempData[idx] || {};
+        const isAscension = ev.id.startsWith('asc-');
+        const discordRequired = isAscension || ev.id === 'aenigma';
         const slideClass = direction === 'back' ? 'participant-slide-back' : (direction === 'next' ? 'participant-slide' : '');
         pFields.className = 'participant-fields ' + slideClass;
         pFields.innerHTML = `
@@ -1359,6 +1369,18 @@
           <input type="email" id="pEmail" placeholder="e.g. STUDENT@GMAIL.COM" value="${escHtml(data.email || '')}">
           <span class="field-error" id="errEmail"></span>
         </div>
+        <div class="field">
+          <label for="pDiscordId">Discord ID ${discordRequired ? '' : '(Optional)'}</label>
+          <input type="text" id="pDiscordId" placeholder="e.g. USERNAME#1234 or USERNAME" value="${escHtml(data.discordId || '')}">
+          <span class="field-error" id="errDiscordId"></span>
+        </div>
+        ${isAscension ? `
+        <div class="field">
+          <label for="pInGameId">In Game ID</label>
+          <input type="text" id="pInGameId" placeholder="e.g. GAMERTAG" value="${escHtml(data.inGameId || '')}">
+          <span class="field-error" id="errInGameId"></span>
+        </div>
+        ` : ''}
       `;
 
         // Optional note - hidden since no events currently have optional participants
@@ -1389,6 +1411,8 @@
           class: (document.getElementById('pClass') || {}).value || '',
           section: (document.getElementById('pSection') || {}).value || '',
           email: (document.getElementById('pEmail') || {}).value || '',
+          discordId: (document.getElementById('pDiscordId') || {}).value || '',
+          inGameId: (document.getElementById('pInGameId') || {}).value || '',
         };
       }
 
@@ -1455,6 +1479,25 @@
         } else if (!/^[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}$/i.test(d.email.trim())) {
           showFieldError('errEmail', emailEl, 'Enter a valid email address');
           valid = false;
+        }
+
+        const isAscension = currentEvent.id.startsWith('asc-');
+        const discordRequired = isAscension || currentEvent.id === 'aenigma';
+
+        // Discord ID
+        const discordEl = document.getElementById('pDiscordId');
+        if (discordRequired && !d.discordId.trim()) {
+          showFieldError('errDiscordId', discordEl, 'Discord ID is required for this event');
+          valid = false;
+        }
+
+        // In Game ID
+        if (isAscension) {
+          const inGameEl = document.getElementById('pInGameId');
+          if (!d.inGameId.trim()) {
+            showFieldError('errInGameId', inGameEl, 'In Game ID is required for Ascension events');
+            valid = false;
+          }
         }
 
         return valid;
@@ -1574,7 +1617,7 @@
 
       btnSkip.addEventListener('click', () => {
         // Skip current participant (save empty)
-        tempData[currentParticipant] = { fullName: '', phone: '', class: '', section: '', email: '' };
+        tempData[currentParticipant] = { fullName: '', phone: '', class: '', section: '', email: '', discordId: '', inGameId: '' };
         // Act as submit for last participant
         registrations[currentEvent.id] = JSON.parse(JSON.stringify(tempData));
         closeModal(true);
@@ -1627,11 +1670,11 @@
           // Check if Firebase is setup and keys replaced
           if (window.firebaseDb && window.firebaseAddDoc && window.firebaseConfig && window.firebaseConfig.apiKey !== "YOUR_API_KEY") {
             const registrationsRef = window.firebaseCollection(window.firebaseDb, "registrations");
-            
+
             // Wrap the Firebase call in a timeout so it doesn't hang forever
             const savePromise = window.firebaseAddDoc(registrationsRef, payload);
             const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout: Database didn't respond.")), 5000));
-            
+
             await Promise.race([savePromise, timeoutPromise]);
           } else {
             // Simulate network delay for testing
@@ -1645,7 +1688,7 @@
           // Visual feedback - Success
           btnFinal.textContent = 'Submitted ✓';
           btnFinal.style.background = 'var(--violet)';
-          
+
           // Open Success Modal
           const successOverlay = document.getElementById('successOverlay');
           if (successOverlay) {
@@ -1653,7 +1696,7 @@
           }
         } catch (error) {
           console.error("Submission Error:", error);
-          
+
           // Revert button
           btnFinal.textContent = 'Submit All Registrations';
           btnFinal.disabled = false;
