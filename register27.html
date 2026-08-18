@@ -1089,6 +1089,24 @@
     </div>
   </div>
 
+  <!-- Error Modal Overlay -->
+  <div class="modal-overlay" id="errorOverlay">
+    <div class="modal-card" style="text-align: center; padding: 48px 32px; max-width: 480px;">
+      <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(255,95,158,0.15); border: 1.5px solid var(--spark); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
+        <svg viewBox="0 0 24 24" style="width: 36px; height: 36px; color: var(--spark);">
+          <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path>
+        </svg>
+      </div>
+      <h3 style="font-family: var(--display); font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 16px;">Submission Failed</h3>
+      <p style="color: var(--ink-mute); margin-bottom: 36px; line-height: 1.5;">We couldn't save your registration. This might be a connection issue or the Firebase database isn't configured yet.</p>
+      
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn-submit" onclick="window.location.href='index.html'" style="background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 12px 24px;">Return to Home</button>
+        <button class="btn-submit" onclick="document.getElementById('errorOverlay').classList.remove('is-active')" style="padding: 12px 24px;">Try Again</button>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Bottom Floating Bar -->
   <div class="bottom-bar" id="bottomBar">
@@ -1105,6 +1123,38 @@
 
   <!-- Shared script (for cursor etc.) -->
   <script src="script.js"></script>
+
+  <!-- Firebase Setup -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    // Provided by user
+    const firebaseConfig = {
+      apiKey: "AIzaSyBE2Qu3N2QZPbdSQKsvTwOeGym_R-3qnHM",
+      authDomain: "livewire-2027.firebaseapp.com",
+      databaseURL: "https://livewire-2027-default-rtdb.firebaseio.com",
+      projectId: "livewire-2027",
+      storageBucket: "livewire-2027.firebasestorage.app",
+      messagingSenderId: "1085354777077",
+      appId: "1:1085354777077:web:775d32b8c561c2862368bc"
+    };
+
+    window.firebaseConfig = firebaseConfig; // Make available globally to check if replaced
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      
+      // Export functions globally so main script can use them
+      window.firebaseDb = db;
+      window.firebaseCollection = collection;
+      window.firebaseAddDoc = addDoc;
+      window.firebaseTimestamp = serverTimestamp;
+    } catch(e) {
+      console.error("Firebase init failed:", e);
+    }
+  </script>
 
   <script>
     // ============================================================
@@ -1547,7 +1597,7 @@
       });
 
       // ---- Final Submit ----
-      btnFinal.addEventListener('click', () => {
+      btnFinal.addEventListener('click', async () => {
         if (!validateSection1()) {
           document.getElementById('schoolSection').scrollIntoView({ behavior: 'smooth' });
           return;
@@ -1562,20 +1612,54 @@
         const payload = {
           school: { name: schoolName, email: schoolEmail },
           teacher: { name: teacherName, phone: teacherPhone, email: teacherEmail },
-          events: registrations
+          events: registrations,
+          timestamp: window.firebaseTimestamp ? window.firebaseTimestamp() : new Date().toISOString()
         };
         console.log('Final registration payload:', payload);
 
-        // Visual feedback
-        btnFinal.textContent = 'Submitted ✓';
+        // Visual feedback - Loading state
+        btnFinal.textContent = 'Saving...';
         btnFinal.disabled = true;
-        btnFinal.style.background = 'var(--violet)';
+        btnFinal.style.background = 'rgba(124, 92, 255, 0.5)';
         btnFinal.style.color = '#fff';
 
-        // Open Success Modal
-        const successOverlay = document.getElementById('successOverlay');
-        if (successOverlay) {
-          successOverlay.classList.add('is-active');
+        try {
+          // Check if Firebase is setup and keys replaced
+          if (window.firebaseDb && window.firebaseAddDoc && window.firebaseConfig && window.firebaseConfig.apiKey !== "YOUR_API_KEY") {
+            const registrationsRef = window.firebaseCollection(window.firebaseDb, "registrations");
+            await window.firebaseAddDoc(registrationsRef, payload);
+          } else {
+            // Simulate network delay for testing
+            await new Promise(r => setTimeout(r, 1200));
+            // Throw error if keys aren't replaced
+            if (!window.firebaseConfig || window.firebaseConfig.apiKey === "YOUR_API_KEY") {
+              throw new Error("Firebase is not configured! Please replace the keys in the HTML.");
+            }
+          }
+
+          // Visual feedback - Success
+          btnFinal.textContent = 'Submitted ✓';
+          btnFinal.style.background = 'var(--violet)';
+          
+          // Open Success Modal
+          const successOverlay = document.getElementById('successOverlay');
+          if (successOverlay) {
+            successOverlay.classList.add('is-active');
+          }
+        } catch (error) {
+          console.error("Submission Error:", error);
+          
+          // Revert button
+          btnFinal.textContent = 'Submit All Registrations';
+          btnFinal.disabled = false;
+          btnFinal.style.background = '';
+          btnFinal.style.color = '';
+
+          // Open Error Modal
+          const errorOverlay = document.getElementById('errorOverlay');
+          if (errorOverlay) {
+            errorOverlay.classList.add('is-active');
+          }
         }
       });
 
