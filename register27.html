@@ -1033,7 +1033,7 @@
           <svg viewBox="0 0 24 24">
             <path d="M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
           </svg>
-          <span>ALL FIELDS IN CAPITAL LETTERS · CLASS AS A NUMBER</span>
+          <span>ALL FIELDS IN CAPITAL LETTERS (EXCLUDING DISCORD ID) · CLASS AS A NUMBER</span>
         </div>
       </div>
       <div class="modal-form-section" id="modalFormSection">
@@ -1371,7 +1371,7 @@
         </div>
         <div class="field">
           <label for="pDiscordId">Discord ID ${discordRequired ? '' : '(Optional)'}</label>
-          <input type="text" id="pDiscordId" placeholder="e.g. USERNAME#1234 or USERNAME" value="${escHtml(data.discordId || '')}">
+          <input type="text" id="pDiscordId" placeholder="e.g. username#1234" value="${escHtml(data.discordId || '')}">
           <span class="field-error" id="errDiscordId"></span>
         </div>
         ${isAscension ? `
@@ -1453,8 +1453,8 @@
         if (!classVal) {
           showFieldError('errClass', classEl, 'Class is required');
           valid = false;
-        } else if (!/^\d{1,2}$/.test(classVal) || parseInt(classVal) < 1 || parseInt(classVal) > 12) {
-          showFieldError('errClass', classEl, 'Enter class as a number (1–12)');
+        } else if (!/^\d{1,2}$/.test(classVal) || parseInt(classVal) < 6 || parseInt(classVal) > 12) {
+          showFieldError('errClass', classEl, 'Enter class as a number (6–12)');
           valid = false;
         }
 
