@@ -401,7 +401,7 @@ nav.primary-nav a.is-active {
 
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1fr 1fr;
   gap: 40px;
   align-items: center;
 }
@@ -428,7 +428,8 @@ nav.primary-nav a.is-active {
 .circuit-stage {
   position: relative;
   aspect-ratio: 1 / 1;
-  max-width: 580px;
+  width: 100%;
+  max-width: 560px;
   justify-self: end;
 }
 
@@ -1198,9 +1199,10 @@ details[open] .event-summary .chev {
   }
 
   .circuit-stage {
-    max-width: 340px;
-    justify-self: start;
-    margin-top: 20px;
+    width: 100%;
+    max-width: 390px;
+    justify-self: end;
+    margin-top: 24px;
   }
 
   .stat-band {
