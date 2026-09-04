@@ -1,228 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LiveWire 4.0 | Charged for Change, Wired for Success</title>
-<meta name="title" content="LiveWire 4.0 | Charged for Change, Wired for Success">
-<meta name="description" content="Join LiveWire 4.0, a 12-event inter-school tech fest spanning coding, gaming, design and innovation.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="LiveWire 4.0 | Charged for Change, Wired for Success">
-<meta property="og:description" content="Join LiveWire 4.0, a 12-event inter-school tech fest spanning coding, gaming, design and innovation.">
-<meta property="og:image" content="LOGO.jpg">
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:title" content="LiveWire 4.0 | Charged for Change, Wired for Success">
-<meta property="twitter:description" content="Join LiveWire 4.0, a 12-event inter-school tech fest spanning coding, gaming, design and innovation.">
-<meta property="twitter:image" content="LOGO.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="icon" type="image/jpeg" href="LOGO.jpg">
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiveWire 4.0 | Charged for Change, Wired for Success</title>
+  <meta name="title" content="LiveWire 4.0 | Charged for Change, Wired for Success">
+  <meta name="description"
+    content="Join LiveWire 4.0, a 12-event inter-school tech fest spanning coding, gaming, design and innovation.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="LiveWire 4.0 | Charged for Change, Wired for Success">
+  <meta property="og:description"
+    content="Join LiveWire 4.0, a 12-event inter-school tech fest spanning coding, gaming, design and innovation.">
+  <meta property="og:image" content="LOGO.jpg">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="LiveWire 4.0 | Charged for Change, Wired for Success">
+  <meta property="twitter:description"
+    content="Join LiveWire 4.0, a 12-event inter-school tech fest spanning coding, gaming, design and innovation.">
+  <meta property="twitter:image" content="LOGO.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="LOGO.jpg">
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<header class="site-header">
-  <div class="wrap">
-    <a href="index.html" class="brand">
-      <img src="LOGO.jpg" alt="LiveWire" class="brand-logo">
-      <span class="brand-text"><span class="l">Live</span><span class="w">Wire</span></span>
-      <span class="ver">4.0</span>
-    </a>
-    <nav class="primary-nav">
-      <a href="index.html">Home</a>
-      <a href="events.html">Events</a>
-      <a href="timeline.html">Timeline</a>
-      <a href="registration.html">Registration</a>
-      <a href="recap.html">2026 Recap</a>
-    </nav>
-    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
-  </div>
-</header>
-
-<main>
-
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow">LiveWire 4.0</span>
-        <h1>Charged for <span class="grad-text">Change</span>,<br>Wired for <span class="grad-text">Success</span>.</h1>
-        <p class="lede">LiveWire 4.0 is a 12-event inter-school tech fest spanning coding, gaming, design and innovation — built for students who'd rather build the thing than hear about it.</p>
-        <div class="hero-cta">
-          <a href="events.html" class="btn btn-primary">View all events</a>
-          <a href="registration.html" class="btn btn-ghost">Registration</a>
-        </div>
-      </div>
-
-      <div class="circuit-stage" aria-hidden="true">
-        <svg viewBox="0 0 480 480" fill="none">
-          <defs>
-            <linearGradient id="traceGrad" x1="80" y1="0" x2="400" y2="480" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#ff5f9e"/>
-              <stop offset="100%" stop-color="#ffb84d"/>
-            </linearGradient>
-            <linearGradient id="dotGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="#ff5f9e"/>
-              <stop offset="100%" stop-color="#ffb84d"/>
-            </linearGradient>
-            <!-- Left L (larger): tall vertical, horizontal base equal length -->
-            <path id="logoL1" d="M 120 120 L 120 360 L 360 360" />
-            <!-- Right L (smaller): shifted diagonally up and right by exact gap amount, equal lengths -->
-            <path id="logoL2" d="M 192 48 L 192 288 L 432 288" />
-            <!-- Reverse paths -->
-            <path id="logoL1rev" d="M 360 360 L 120 360 L 120 120" />
-            <path id="logoL2rev" d="M 432 288 L 192 288 L 192 48" />
-          </defs>
-
-          <!-- Left L shape -->
-          <use href="#logoL1" stroke="url(#traceGrad)" stroke-width="36" stroke-linecap="round" stroke-linejoin="miter" fill="none" opacity="0.6" class="trace-draw d1"/>
-          <!-- Right L shape -->
-          <use href="#logoL2" stroke="url(#traceGrad)" stroke-width="36" stroke-linecap="round" stroke-linejoin="miter" fill="none" opacity="0.6" class="trace-draw d2"/>
-
-          <!-- Corner nodes on left L -->
-          <circle class="node logo-node" cx="120" cy="120" r="5"/>
-          <circle class="node logo-node" cx="120" cy="360" r="6"/>
-          <circle class="node logo-node" cx="360" cy="360" r="5"/>
-          <!-- Corner nodes on right L -->
-          <circle class="node logo-node" cx="192" cy="48" r="5"/>
-          <circle class="node logo-node" cx="192" cy="288" r="6"/>
-          <circle class="node logo-node" cx="432" cy="288" r="5"/>
-
-          <!-- Animated dots on left L -->
-          <circle class="pulse logo-pulse" r="5" fill="url(#dotGrad)">
-            <animateMotion dur="3.6s" repeatCount="indefinite">
-              <mpath href="#logoL1"/>
-            </animateMotion>
-          </circle>
-          <circle class="pulse logo-pulse" r="5" fill="url(#dotGrad)">
-            <animateMotion dur="3.6s" begin="1.8s" repeatCount="indefinite">
-              <mpath href="#logoL1rev"/>
-            </animateMotion>
-          </circle>
-          <!-- Animated dots on right L -->
-          <circle class="pulse logo-pulse" r="4" fill="url(#dotGrad)">
-            <animateMotion dur="2.8s" begin="0.4s" repeatCount="indefinite">
-              <mpath href="#logoL2"/>
-            </animateMotion>
-          </circle>
-          <circle class="pulse logo-pulse" r="4" fill="url(#dotGrad)">
-            <animateMotion dur="2.8s" begin="1.8s" repeatCount="indefinite">
-              <mpath href="#logoL2rev"/>
-            </animateMotion>
-          </circle>
-          <!-- Extra small accent dots -->
-          <circle class="pulse logo-pulse-sm" r="3" fill="#ff5f9e">
-            <animateMotion dur="4.5s" begin="0.8s" repeatCount="indefinite">
-              <mpath href="#logoL1"/>
-            </animateMotion>
-          </circle>
-          <circle class="pulse logo-pulse-sm" r="3" fill="#ffb84d">
-            <animateMotion dur="3.8s" begin="1.2s" repeatCount="indefinite">
-              <mpath href="#logoL2"/>
-            </animateMotion>
-          </circle>
-        </svg>
-      </div>
-    </div>
-  </section>
-
-  <div class="wrap"><hr class="divider"></div>
-
-  <section class="reveal">
+  <header class="site-header">
     <div class="wrap">
-      <div class="stat-band">
-        <div><span class="num">12</span><span class="cat">Competitions</span></div>
-        <div><span class="num">04</span><span class="cat">Tracks</span></div>
-        <div><span class="num">VI–XII</span><span class="cat">Eligible classes</span></div>
-        <div><span class="num">2027</span><span class="cat">This edition</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="reveal">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">What runs here</span>
-        <h2>Four tracks, twelve events.</h2>
-        <p>Each event runs an online prelim followed, for most, by an offline final on campus — judged, timed, and unforgiving of plagiarism.</p>
-      </div>
-      <div class="grid-2x2">
-        <div class="card">
-          <span class="tag">Coding</span>
-          <h3>HackerRank · APPetite · Sandbox Mania</h3>
-          <p>Competitive programming, app builds, and Scratch game design — for logic-first minds.</p>
-        </div>
-        <div class="card">
-          <span class="tag">Gaming</span>
-          <h3>Ascension · Dynamic Racing Showdown</h3>
-          <p>An online esports bracket and an offline wireless-chassis obstacle race.</p>
-        </div>
-        <div class="card">
-          <span class="tag">Designing</span>
-          <h3>Paradox Palette · Aperture Alchemy · Frame by Frame · Sound Bytes</h3>
-          <p>Posters, photography, and film — original work only, judged on craft and concept.</p>
-        </div>
-        <div class="card">
-          <span class="tag">Innovation</span>
-          <h3>Aenigma Syntax · Venture Verse · Quiz Quotient</h3>
-          <p>Cryptic hunts, entrepreneurship pitches, and tech quizzes — for creative problem solvers.</p>
-        </div>
-      </div>
-      <div style="margin-top:14px;">
-        <a href="events.html" class="btn btn-ghost">See full rules for every event →</a>
-      </div>
-    </div>
-  </section>
-
-
-
-  <section class="reveal">
-    <div class="wrap">
-      <div class="reg-cta-card">
-        <span class="eyebrow">Ready when you are</span>
-        <h3>Bring a team. Pick an event. Show up wired in.</h3>
-        <p>Registration details and the sign-up link live on the registration page.</p>
-        <a href="registration.html" class="btn btn-primary big-btn">Go to registration</a>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-grid">
-      <div>
-        <a href="index.html" class="brand" style="margin-bottom:10px;">
-          <img src="LOGO.jpg" alt="LiveWire" class="brand-logo">
-          <span class="brand-text"><span class="l">Live</span><span class="w">Wire</span></span>
-          <span class="ver">4.0</span>
-        </a>
-
-      </div>
-      <div>
-        <h4>Site</h4>
+      <a href="index.html" class="brand">
+        <img src="LOGO.jpg" alt="LiveWire" class="brand-logo">
+        <span class="brand-text"><span class="l">Live</span><span class="w">Wire</span></span>
+        <span class="ver">4.0</span>
+      </a>
+      <nav class="primary-nav">
+        <a href="index.html">Home</a>
         <a href="events.html">Events</a>
         <a href="timeline.html">Timeline</a>
         <a href="registration.html">Registration</a>
         <a href="recap.html">2026 Recap</a>
-      </div>
-      <div>
-        <h4>Resources</h4>
-        <a href="https://www.instagram.com/livewire_bgs" target="_blank">Instagram</a>
-        <a href="https://discord.com/invite/5c5zXu8tNT" target="_blank">Discord</a>
-        <a href="https://www.youtube.com/@TheLiveWireClub" target="_blank">YouTube</a>
-        <a href="https://in.linkedin.com/company/the-live-wire-club" target="_blank">LinkedIn</a>
-        <a href="https://linktr.ee/livewire.bgsips" target="_blank">Linktree</a>
-        <a href="brochure.html">Brochure</a>
-      </div>
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </div>
-    <div class="footer-bottom">
-      <span>© LiveWire 4.0</span>
-      <span>Charged for Change, Wired for Success.</span>
-    </div>
-  </div>
-</footer>
+  </header>
 
-<script src="script.js"></script>
+  <main>
+
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">LiveWire 4.0</span>
+          <h1>Charged for <span class="grad-text">Change</span>,<br>Wired for <span class="grad-text">Success</span>.
+          </h1>
+          <p class="lede">LiveWire 4.0 is a 12-event inter-school tech fest spanning coding, gaming, design and
+            innovation — built for students who'd rather build the thing than hear about it.</p>
+          <div class="hero-cta">
+            <a href="events.html" class="btn btn-primary">View all events</a>
+            <a href="registration.html" class="btn btn-ghost">Registration</a>
+          </div>
+        </div>
+
+        <div class="circuit-stage" aria-hidden="true">
+          <svg viewBox="0 0 480 480" fill="none">
+            <defs>
+              <linearGradient id="traceGrad" x1="80" y1="0" x2="400" y2="480" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ff5f9e" />
+                <stop offset="100%" stop-color="#ffb84d" />
+              </linearGradient>
+              <linearGradient id="dotGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#ff5f9e" />
+                <stop offset="100%" stop-color="#ffb84d" />
+              </linearGradient>
+              <!-- Left L (larger): tall vertical, horizontal base equal length -->
+              <path id="logoL1" d="M 120 120 L 120 360 L 360 360" />
+              <!-- Right L (smaller): shifted diagonally up and right by exact gap amount, equal lengths -->
+              <path id="logoL2" d="M 192 48 L 192 288 L 432 288" />
+              <!-- Reverse paths -->
+              <path id="logoL1rev" d="M 360 360 L 120 360 L 120 120" />
+              <path id="logoL2rev" d="M 432 288 L 192 288 L 192 48" />
+            </defs>
+
+            <!-- Left L shape -->
+            <use href="#logoL1" stroke="url(#traceGrad)" stroke-width="36" stroke-linecap="round"
+              stroke-linejoin="miter" fill="none" opacity="0.6" class="trace-draw d1" />
+            <!-- Right L shape -->
+            <use href="#logoL2" stroke="url(#traceGrad)" stroke-width="36" stroke-linecap="round"
+              stroke-linejoin="miter" fill="none" opacity="0.6" class="trace-draw d2" />
+
+            <!-- Corner nodes on left L -->
+            <circle class="node logo-node" cx="120" cy="120" r="5" />
+            <circle class="node logo-node" cx="120" cy="360" r="6" />
+            <circle class="node logo-node" cx="360" cy="360" r="5" />
+            <!-- Corner nodes on right L -->
+            <circle class="node logo-node" cx="192" cy="48" r="5" />
+            <circle class="node logo-node" cx="192" cy="288" r="6" />
+            <circle class="node logo-node" cx="432" cy="288" r="5" />
+
+            <!-- Animated dots on left L -->
+            <circle class="pulse logo-pulse" r="5" fill="url(#dotGrad)">
+              <animateMotion dur="3.6s" repeatCount="indefinite">
+                <mpath href="#logoL1" />
+              </animateMotion>
+            </circle>
+            <circle class="pulse logo-pulse" r="5" fill="url(#dotGrad)">
+              <animateMotion dur="3.6s" begin="1.8s" repeatCount="indefinite">
+                <mpath href="#logoL1rev" />
+              </animateMotion>
+            </circle>
+            <!-- Animated dots on right L -->
+            <circle class="pulse logo-pulse" r="4" fill="url(#dotGrad)">
+              <animateMotion dur="2.8s" begin="0.4s" repeatCount="indefinite">
+                <mpath href="#logoL2" />
+              </animateMotion>
+            </circle>
+            <circle class="pulse logo-pulse" r="4" fill="url(#dotGrad)">
+              <animateMotion dur="2.8s" begin="1.8s" repeatCount="indefinite">
+                <mpath href="#logoL2rev" />
+              </animateMotion>
+            </circle>
+            <!-- Extra small accent dots -->
+            <circle class="pulse logo-pulse-sm" r="3" fill="#ff5f9e">
+              <animateMotion dur="4.5s" begin="0.8s" repeatCount="indefinite">
+                <mpath href="#logoL1" />
+              </animateMotion>
+            </circle>
+            <circle class="pulse logo-pulse-sm" r="3" fill="#ffb84d">
+              <animateMotion dur="3.8s" begin="1.2s" repeatCount="indefinite">
+                <mpath href="#logoL2" />
+              </animateMotion>
+            </circle>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <hr class="divider">
+    </div>
+
+    <section class="reveal">
+      <div class="wrap">
+        <div class="stat-band">
+          <div><span class="num">12</span><span class="cat">Competitions</span></div>
+          <div><span class="num">04</span><span class="cat">Tracks</span></div>
+          <div><span class="num">VI–XII</span><span class="cat">Eligible classes</span></div>
+          <div><span class="num">2027</span><span class="cat">This edition</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">What runs here</span>
+          <h2>Four tracks, twelve events.</h2>
+          <p>Each event runs an online prelim followed, for most, by an offline final on campus — judged, timed, and
+            unforgiving of plagiarism.</p>
+        </div>
+        <div class="grid-2x2">
+          <div class="card">
+            <span class="tag">Coding</span>
+            <h3>HackerRank · APPetite · Sandbox Mania</h3>
+            <p>Competitive programming, app builds, and Scratch game design — for logic-first minds.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Gaming</span>
+            <h3>Ascension · Dynamic Racing Showdown</h3>
+            <p>An online esports bracket and an offline wireless-chassis obstacle race.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Designing</span>
+            <h3>Paradox Palette · Aperture Alchemy · Frame by Frame · Sound Bytes</h3>
+            <p>Posters, photography, and film — original work only, judged on craft and concept.</p>
+          </div>
+          <div class="card">
+            <span class="tag">Innovation</span>
+            <h3>Aenigma Syntax · Venture Verse · Quiz Quotient</h3>
+            <p>Cryptic hunts, entrepreneurship pitches, and tech quizzes — for creative problem solvers.</p>
+          </div>
+        </div>
+        <div style="margin-top:14px;">
+          <a href="events.html" class="btn btn-ghost">See full rules for every event →</a>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section class="reveal">
+      <div class="wrap">
+        <div class="reg-cta-card">
+          <span class="eyebrow">Ready when you are</span>
+          <h3>Bring a team. Pick an event. Show up wired in.</h3>
+          <p>Registration details and the sign-up link live on the registration page.</p>
+          <a href="registration.html" class="btn btn-primary big-btn">Go to registration</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="brand" style="margin-bottom:10px;">
+            <img src="LOGO.jpg" alt="LiveWire" class="brand-logo">
+            <span class="brand-text"><span class="l">Live</span><span class="w">Wire</span></span>
+            <span class="ver">4.0</span>
+          </a>
+
+        </div>
+        <div>
+          <h4>Site</h4>
+          <a href="events.html">Events</a>
+          <a href="timeline.html">Timeline</a>
+          <a href="registration.html">Registration</a>
+          <a href="recap.html">2026 Recap</a>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <a href="https://www.instagram.com/livewire_bgs" target="_blank">Instagram</a>
+          <a href="https://discord.com/invite/5c5zXu8tNT" target="_blank">Discord</a>
+          <a href="https://www.youtube.com/@TheLiveWireClub" target="_blank">YouTube</a>
+          <a href="https://in.linkedin.com/company/the-live-wire-club" target="_blank">LinkedIn</a>
+          <a href="https://linktr.ee/livewire.bgsips" target="_blank">Linktree</a>
+          <a href="brochure.html">Brochure</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© LiveWire 4.0</span>
+        <span>Charged for Change, Wired for Success.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
+
 </html>

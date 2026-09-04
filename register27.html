@@ -1136,7 +1136,7 @@
   <!-- Firebase Setup -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     // Provided by user
     const firebaseConfig = {
@@ -1158,7 +1158,8 @@
       // Export functions globally so main script can use them
       window.firebaseDb = db;
       window.firebaseCollection = collection;
-      window.firebaseAddDoc = addDoc;
+      window.firebaseSetDoc = setDoc;
+      window.firebaseDoc = doc;
       window.firebaseTimestamp = serverTimestamp;
     } catch (e) {
       console.error("Firebase init failed:", e);
@@ -1171,6 +1172,13 @@
     // ============================================================
     (function () {
       'use strict';
+      
+      // ---- Session ID for Idempotency ----
+      let sessionId = localStorage.getItem('livewire_reg_session_id');
+      if (!sessionId) {
+        sessionId = (window.crypto && crypto.randomUUID && crypto.randomUUID()) || (Date.now().toString(36) + Math.random().toString(36).substring(2));
+        localStorage.setItem('livewire_reg_session_id', sessionId);
+      }
 
       // ---- Event Data ----
       const EVENTS = [
@@ -1659,7 +1667,6 @@
           events: registrations,
           timestamp: window.firebaseTimestamp ? window.firebaseTimestamp() : new Date().toISOString()
         };
-        console.log('Final registration payload:', payload);
 
         // Visual feedback - Loading state
         btnFinal.textContent = 'Saving...';
@@ -1669,14 +1676,17 @@
 
         try {
           // Check if Firebase is setup and keys replaced
-          if (window.firebaseDb && window.firebaseAddDoc && window.firebaseConfig && window.firebaseConfig.apiKey !== "YOUR_API_KEY") {
-            const registrationsRef = window.firebaseCollection(window.firebaseDb, "registrations");
+          if (window.firebaseDb && window.firebaseSetDoc && window.firebaseConfig && window.firebaseConfig.apiKey !== "YOUR_API_KEY") {
+            const docRef = window.firebaseDoc(window.firebaseDb, "registrations", sessionId);
 
             // Wrap the Firebase call in a timeout so it doesn't hang forever
-            const savePromise = window.firebaseAddDoc(registrationsRef, payload);
+            const savePromise = window.firebaseSetDoc(docRef, payload);
             const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout: Database didn't respond.")), 5000));
 
             await Promise.race([savePromise, timeoutPromise]);
+            
+            // Clear session ID after successful submission so next form uses a fresh ID
+            localStorage.removeItem('livewire_reg_session_id');
           } else {
             // Simulate network delay for testing
             await new Promise(r => setTimeout(r, 1200));

@@ -159,13 +159,41 @@ p{ color: var(--ink-mute); }
 /* ---------------- Header ---------------- */
 .site-header{
   position: sticky; top: 0; z-index: 50;
-  background: rgba(10,14,20,0.72);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
+  background: transparent;
+  border-bottom: none;
+  padding: 18px var(--edge) 0;
 }
 .site-header .wrap{
   display:flex; align-items:center; justify-content:space-between;
-  height: 76px;
+  height: 64px;
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 0 10px 0 22px;
+  border-radius: 999px;
+
+  /* liquid-glass pill */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 40%, rgba(255,255,255,0.05)),
+    rgba(18,26,38,0.35);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow:
+    0 12px 36px -12px rgba(0,0,0,0.55),
+    0 1px 0 rgba(255,255,255,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(255,255,255,0.04),
+    inset 0 0 24px rgba(124,92,255,0.05);
+  transition: box-shadow .3s ease, border-color .3s ease, background .3s ease;
+}
+.site-header .wrap::before{
+  /* soft top glass highlight, like light hitting curved glass */
+  content:"";
+  position:absolute; inset:0;
+  border-radius:999px;
+  background: linear-gradient(115deg, rgba(255,255,255,0.16) 0%, transparent 30%);
+  pointer-events:none;
+  mix-blend-mode: overlay;
 }
 .brand{
   display:flex; align-items:center; gap:10px;
@@ -197,24 +225,29 @@ p{ color: var(--ink-mute); }
   flex-shrink: 0;
 }
 
-nav.primary-nav{ display:flex; align-items:center; gap: 4px; }
+nav.primary-nav{ display:flex; align-items:center; gap: 2px; }
 nav.primary-nav a{
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-mute);
-  padding: 10px 14px;
+  padding: 9px 13px;
   border-radius: 999px;
-  transition: color .2s ease, background .2s ease;
+  transition: color .2s ease, background .2s ease, box-shadow .2s ease;
 }
-nav.primary-nav a:hover{ color: var(--ink); background: var(--surface); }
-nav.primary-nav a.is-active{ color: var(--bg); background: var(--green); }
+nav.primary-nav a:hover{ color: var(--ink); background: rgba(255,255,255,0.08); }
+nav.primary-nav a.is-active{
+  color: var(--bg);
+  background: var(--green);
+  box-shadow: 0 2px 12px -2px rgba(34,229,168,0.6);
+}
 
 .nav-toggle{
   display:none;
-  background:none; border:1px solid var(--line); border-radius:8px;
-  width:40px; height:40px; color: var(--ink); cursor:pointer;
+  background: rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.14); border-radius:999px;
+  width:36px; height:36px; color: var(--ink); cursor:pointer;
 }
 
 /* ---------------- Buttons ---------------- */
@@ -610,15 +643,20 @@ details[open] .event-summary .chev{ transform: rotate(45deg); opacity:1; color: 
 }
 @media (max-width: 680px){
   nav.primary-nav{
-    position: fixed; inset: 76px 0 auto 0;
+    position: fixed; inset: 96px var(--edge) auto var(--edge);
     flex-direction:column; align-items:stretch; gap:0;
-    background: var(--bg-2); border-bottom:1px solid var(--line);
-    padding: 10px var(--edge) 20px;
+    background: rgba(13,19,29,0.75);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 20px;
+    padding: 10px 16px 16px;
+    box-shadow: 0 20px 40px -14px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12);
     transform: translateY(-12px); opacity:0; pointer-events:none;
     transition: all .22s ease;
   }
   nav.primary-nav.is-open{ transform:none; opacity:1; pointer-events:auto; }
-  nav.primary-nav a{ padding: 14px 6px; text-align:left; border-radius:0; border-bottom:1px solid var(--line); }
+  nav.primary-nav a{ padding: 14px 6px; text-align:left; border-radius:0; border-bottom:1px solid rgba(255,255,255,0.08); }
   .nav-toggle{ display:block; }
   .grid-3, .grid-2, .grid-2x2{ grid-template-columns: 1fr; }
   .recap-grid{ grid-template-columns: 1fr; }

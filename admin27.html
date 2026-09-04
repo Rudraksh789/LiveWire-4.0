@@ -234,10 +234,15 @@
     <div class="modal-card"
       style="text-align: center; padding: 48px 40px; max-width: 420px; box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);">
       <h3>Admin Access</h3>
-      <input type="password" id="adminPassword" placeholder="Enter Password" class="admin-input" autocomplete="off"
-        style="text-align: center; letter-spacing: 0.1em;">
-      <button class="btn-submit" id="btnLogin">Unlock Database</button>
-      <span class="error-msg" id="loginError" style="margin-top:16px; display:block;"></span>
+      <form id="loginForm">
+        <!-- Hidden username field so the browser password manager knows how to save it -->
+        <input type="text" name="username" autocomplete="username" value="livewire_admin" style="width:1px; height:1px; opacity:0; position:absolute; left:-9999px;" tabindex="-1" aria-hidden="true">
+        
+        <input type="password" id="adminPassword" name="password" placeholder="Enter Password" class="admin-input" autocomplete="current-password" required
+          style="text-align: center; letter-spacing: 0.1em;">
+        <button type="submit" class="btn-submit" id="btnLogin">Unlock Database</button>
+        <span class="error-msg" id="loginError" style="margin-top:16px; display:block;"></span>
+      </form>
     </div>
   </div>
 
@@ -281,7 +286,8 @@
   <!-- Firebase Setup -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, deleteDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, deleteDoc, doc, getDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBE2Qu3N2QZPbdSQKsvTwOeGym_R-3qnHM",
@@ -296,13 +302,19 @@
     try {
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
+      const auth = getAuth(app);
       window.firebaseDb = db;
+      window.firebaseAuth = auth;
       window.firebaseCollection = collection;
       window.firebaseGetDocs = getDocs;
       window.firebaseDeleteDoc = deleteDoc;
       window.firebaseDoc = doc;
       window.firebaseGetDoc = getDoc;
       window.firebaseUpdateDoc = updateDoc;
+      window.firebaseSignIn = signInWithEmailAndPassword;
+      window.firebaseOnAuthStateChanged = onAuthStateChanged;
+      window.firebaseSignOut = signOut;
+      window.firebaseOnSnapshot = onSnapshot;
 
       // Dispatch event when Firebase is ready
       window.dispatchEvent(new Event('firebaseReady'));
@@ -313,11 +325,9 @@
 
   <!-- Admin Logic -->
   <script>
-    const PASS = "lab.wired.27";
-    const DEV_PASS = "dev.lab.27";
-
     const loginOverlay = document.getElementById('loginOverlay');
     const adminDashboard = document.getElementById('adminDashboard');
+    const loginForm = document.getElementById('loginForm');
     const adminPassword = document.getElementById('adminPassword');
     const btnLogin = document.getElementById('btnLogin');
     const loginError = document.getElementById('loginError');
@@ -328,7 +338,10 @@
     const thActions = document.getElementById('thActions');
 
     let allData = [];
-    let isDev = false;
+    
+    // Note: A dev-only delete role should be added via Firebase custom claims or a Cloud Function later.
+    // For now, keeping a single admin role (isDev = true) so delete functionality remains accessible to signed-in admins.
+    let isDev = true;
 
     const EVENT_NAMES = {
       'hackerrank': 'HackerRank',
@@ -347,45 +360,65 @@
       'quiz': 'Quiz Quotient'
     };
 
-    // Check session on load
-    const auth = sessionStorage.getItem('admin_auth');
-    if (auth === 'true') {
-      isDev = false;
-      unlockDashboard();
-    } else if (auth === 'dev') {
-      isDev = true;
-      unlockDashboard();
+    function setupAuth() {
+      window.firebaseOnAuthStateChanged(window.firebaseAuth, (user) => {
+        if (user) {
+          // If we log in with dev@livewire.com, give dev access.
+          isDev = user.email === 'dev@livewire.com';
+          loginError.textContent = '';
+          unlockDashboard();
+        } else {
+          loginOverlay.classList.remove('is-hidden');
+          adminDashboard.classList.remove('is-visible');
+        }
+      });
+    }
+
+    if (window.firebaseAuth) {
+      setupAuth();
+    } else {
+      window.addEventListener('firebaseReady', setupAuth);
     }
 
     // Login Logic
-    btnLogin.addEventListener('click', () => {
-      if (adminPassword.value === PASS) {
-        sessionStorage.setItem('admin_auth', 'true');
-        isDev = false;
-        loginError.textContent = '';
-        unlockDashboard();
-      } else if (adminPassword.value === DEV_PASS) {
-        sessionStorage.setItem('admin_auth', 'dev');
-        isDev = true;
-        loginError.textContent = '';
-        unlockDashboard();
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pwd = adminPassword.value;
+      
+      let emailToTry = '';
+      if (pwd === 'dev.lab.27') {
+        emailToTry = 'dev@livewire.com';
+      } else if (pwd === 'wired.lab.27') {
+        emailToTry = 'admin@livewire.com';
       } else {
         loginError.textContent = 'Incorrect password.';
         loginError.classList.add('is-visible');
         adminPassword.value = '';
+        return;
       }
-    });
 
-    adminPassword.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') btnLogin.click();
+      btnLogin.disabled = true;
+      btnLogin.textContent = 'Signing in...';
+      
+      window.firebaseSignIn(window.firebaseAuth, emailToTry, pwd)
+        .then(() => {
+          adminPassword.value = '';
+          btnLogin.disabled = false;
+          btnLogin.textContent = 'Unlock Database';
+        })
+        .catch((error) => {
+          btnLogin.disabled = false;
+          btnLogin.textContent = 'Unlock Database';
+          loginError.textContent = 'Login failed. Did you create the accounts in Firebase?';
+          loginError.classList.add('is-visible');
+          adminPassword.value = '';
+        });
     });
 
     btnLogout.addEventListener('click', () => {
-      sessionStorage.removeItem('admin_auth');
-      isDev = false;
-      loginOverlay.classList.remove('is-hidden');
-      adminDashboard.classList.remove('is-visible');
-      adminPassword.value = '';
+      if (window.firebaseAuth) {
+        window.firebaseSignOut(window.firebaseAuth).catch(err => console.error("Logout failed", err));
+      }
     });
 
     function unlockDashboard() {
@@ -399,56 +432,64 @@
       }
     }
 
+    let unsubscribe = null;
+
     // Fetch and flatten data
-    async function fetchData() {
+    function fetchData() {
       try {
-        const querySnapshot = await window.firebaseGetDocs(window.firebaseCollection(window.firebaseDb, "registrations"));
-        allData = [];
+        if (unsubscribe) unsubscribe();
 
-        querySnapshot.forEach((doc) => {
-          const id = doc.id;
-          const data = doc.data();
-          const schoolName = data.school?.name || 'N/A';
-          const schoolEmail = data.school?.email || 'N/A';
-          const teacherName = data.teacher?.name || 'N/A';
-          const teacherPhone = data.teacher?.phone || 'N/A';
-          const teacherEmail = data.teacher?.email || 'N/A';
+        unsubscribe = window.firebaseOnSnapshot(window.firebaseCollection(window.firebaseDb, "registrations"), (querySnapshot) => {
+          allData = [];
 
-          if (data.events) {
-            Object.keys(data.events).forEach(eventId => {
-              const participants = data.events[eventId];
-              if (Array.isArray(participants)) {
-                participants.forEach((p, index) => {
-                  // Only add if participant actually has a name (skip empty ones)
-                  if (p.fullName && p.fullName.trim() !== '') {
-                    allData.push({
-                      docId: id,
-                      schoolName: schoolName,
-                      schoolEmail: schoolEmail,
-                      teacherName: teacherName,
-                      teacherPhone: teacherPhone,
-                      teacherEmail: teacherEmail,
-                      eventId: eventId,
-                      pIndex: index,
-                      event: EVENT_NAMES[eventId] || eventId,
-                      participant: p.fullName,
-                      pClass: p.class || '-',
-                      section: p.section || '-',
-                      phone: p.phone || '-',
-                      email: p.email || '-',
-                      discordId: p.discordId || '-',
-                      inGameId: p.inGameId || '-'
-                    });
-                  }
-                });
-              }
-            });
-          }
+          querySnapshot.forEach((doc) => {
+            const id = doc.id;
+            const data = doc.data();
+            const schoolName = data.school?.name || 'N/A';
+            const schoolEmail = data.school?.email || 'N/A';
+            const teacherName = data.teacher?.name || 'N/A';
+            const teacherPhone = data.teacher?.phone || 'N/A';
+            const teacherEmail = data.teacher?.email || 'N/A';
+
+            if (data.events) {
+              Object.keys(data.events).forEach(eventId => {
+                const participants = data.events[eventId];
+                if (Array.isArray(participants)) {
+                  participants.forEach((p, index) => {
+                    // Only add if participant actually has a name (skip empty ones)
+                    if (p.fullName && p.fullName.trim() !== '') {
+                      allData.push({
+                        docId: id,
+                        schoolName: schoolName,
+                        schoolEmail: schoolEmail,
+                        teacherName: teacherName,
+                        teacherPhone: teacherPhone,
+                        teacherEmail: teacherEmail,
+                        eventId: eventId,
+                        pIndex: index,
+                        event: EVENT_NAMES[eventId] || eventId,
+                        participant: p.fullName,
+                        pClass: p.class || '-',
+                        section: p.section || '-',
+                        phone: p.phone || '-',
+                        email: p.email || '-',
+                        discordId: p.discordId || '-',
+                        inGameId: p.inGameId || '-'
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+
+          renderTable(allData);
+        }, (error) => {
+          console.error("Error fetching data: ", error);
+          tableBody.innerHTML = `<tr><td colspan="11" class="error-msg is-visible">Error loading data. Check console.</td></tr>`;
         });
-
-        renderTable(allData);
       } catch (error) {
-        console.error("Error fetching data: ", error);
+        console.error("Error setting up listener: ", error);
         tableBody.innerHTML = `<tr><td colspan="11" class="error-msg is-visible">Error loading data. Check console.</td></tr>`;
       }
     }
@@ -490,11 +531,12 @@
           const events = data.events || {};
 
           if (events[eventId] && events[eventId][pIndex]) {
-            // Clear the specific slot to preserve the array length for the frontend
-            events[eventId][pIndex] = { fullName: "", class: "", section: "", phone: "", email: "" };
+            // We blank out the slot instead of using splice() to preserve array indices,
+            // because the frontend relies on strict array positions (e.g. participant 1 is index 0).
+            events[eventId][pIndex] = { fullName: "", class: "", section: "", phone: "", email: "", discordId: "", inGameId: "" };
             await window.firebaseUpdateDoc(docRef, { events: events });
             alert("Participant deleted successfully.");
-            fetchData(); // Reload table
+            // Table reloads automatically via onSnapshot
           } else {
             alert("Participant data not found in document.");
           }
@@ -527,22 +569,32 @@
       // Use the currently displayed data (so search filters apply to export!)
       const currentData = searchInput.value ? allData.filter(row => Object.values(row).some(val => String(val).toLowerCase().includes(searchInput.value.toLowerCase()))) : allData;
 
+      function sanitizeCsvField(value, forceText = false) {
+        let str = String(value || "");
+        if (forceText && !str.startsWith("'")) {
+          str = "'" + str;
+        } else if (/^[=+\-@\t\r]/.test(str)) {
+          str = "'" + str;
+        }
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+
       for (const row of currentData) {
         const values = [
-          row.docId,
-          `"${row.schoolName.replace(/"/g, '""')}"`,
-          `"${row.schoolEmail.replace(/"/g, '""')}"`,
-          `"${row.teacherName.replace(/"/g, '""')}"`,
-          `="${row.teacherPhone}"`,
-          `"${row.teacherEmail.replace(/"/g, '""')}"`,
-          `"${row.event.replace(/"/g, '""')}"`,
-          `"${row.participant.replace(/"/g, '""')}"`,
-          row.pClass,
-          `"${row.section.replace(/"/g, '""')}"`,
-          `="${row.phone}"`, // Prevent Excel scientific notation
-          `"${row.email}"`,
-          `"${row.discordId.replace(/"/g, '""')}"`,
-          `"${row.inGameId.replace(/"/g, '""')}"`
+          sanitizeCsvField(row.docId),
+          sanitizeCsvField(row.schoolName),
+          sanitizeCsvField(row.schoolEmail),
+          sanitizeCsvField(row.teacherName),
+          sanitizeCsvField(row.teacherPhone, true), // Prevent Excel scientific notation
+          sanitizeCsvField(row.teacherEmail),
+          sanitizeCsvField(row.event),
+          sanitizeCsvField(row.participant),
+          sanitizeCsvField(row.pClass),
+          sanitizeCsvField(row.section),
+          sanitizeCsvField(row.phone, true), // Prevent Excel scientific notation
+          sanitizeCsvField(row.email),
+          sanitizeCsvField(row.discordId),
+          sanitizeCsvField(row.inGameId)
         ];
         csvRows.push(values.join(','));
       }
