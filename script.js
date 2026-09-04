@@ -5,13 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggle = document.querySelector('.nav-toggle');
   const nav = document.querySelector('.primary-nav');
   if (toggle && nav) {
+    const wrap = toggle.closest('.wrap');
     toggle.addEventListener('click', () => {
       nav.classList.toggle('is-open');
       const open = nav.classList.contains('is-open');
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (wrap) wrap.classList.toggle('nav-expanded', open);
     });
     nav.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => nav.classList.remove('is-open'));
+      a.addEventListener('click', () => {
+        nav.classList.remove('is-open');
+        if (wrap) wrap.classList.remove('nav-expanded');
+      });
     });
   }
 
