@@ -1252,7 +1252,7 @@ details[open] .event-summary .chev {
 @media (max-width: 680px) {
   .site-header .wrap {
     border-radius: 999px;
-    transition: border-radius .35s cubic-bezier(0.16, 1, 0.3, 1), border-bottom-color .35s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;
+    transition: border-radius .4s cubic-bezier(0.16, 1, 0.3, 1), border-bottom-color .4s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;
   }
 
   .site-header .wrap.nav-expanded {
@@ -1265,15 +1265,15 @@ details[open] .event-summary .chev {
   }
 
   .site-header .wrap::before {
-    transition: border-radius .35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-radius .4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   nav.primary-nav {
     position: absolute;
-    top: calc(100% - 1px);
-    left: 0;
-    right: 0;
-    z-index: -1;
+    top: calc(18px + 64px - 1px);
+    left: var(--edge);
+    right: var(--edge);
+    z-index: 49;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
@@ -1298,8 +1298,8 @@ details[open] .event-summary .chev {
     overflow: hidden;
     opacity: 0;
     pointer-events: none;
-    /* closing animation */
-    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+    /* perfectly synced closing animation */
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
   }
 
   /* glass highlight on the dropdown too */
@@ -1317,8 +1317,8 @@ details[open] .event-summary .chev {
     max-height: 400px;
     opacity: 1;
     pointer-events: auto;
-    /* opening animation — slower */
-    transition: max-height 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    /* perfectly synced opening animation */
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
   }
 
   nav.primary-nav a {
