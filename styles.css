@@ -525,6 +525,37 @@ details[open] .event-summary .chev{ transform: rotate(45deg); opacity:1; color: 
 .event-body li::before{ content:"›"; position:absolute; left:0; color: var(--green); }
 .event-body .blank-note{ font-family: var(--mono); font-size:12px; color: var(--amber); margin-top: 14px; }
 
+.new-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  padding: 2px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #fff;
+  background: linear-gradient(120deg, var(--spark), var(--violet));
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(255, 95, 158, 0.4);
+  position: relative;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.new-label::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2.5s infinite ease-in-out;
+}
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
 /* ---------------- Timeline "no signal" state ---------------- */
 .scope{
   border: 1px solid var(--line);
