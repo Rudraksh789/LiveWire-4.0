@@ -1252,20 +1252,26 @@ details[open] .event-summary .chev {
 @media (max-width: 680px) {
   .site-header .wrap {
     border-radius: 999px;
-    transition: border-radius .4s cubic-bezier(0.16, 1, 0.3, 1), border-bottom-color .4s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;
+    /* CLOSING: corners round immediately as menu shrinks */
+    transition: border-radius .35s cubic-bezier(0.16, 1, 0.3, 1) 0s, border-bottom-color .35s ease 0s, box-shadow .3s ease 0s, border-color .3s ease 0s, background .3s ease 0s;
   }
 
   .site-header .wrap.nav-expanded {
     border-radius: 22px 22px 0 0;
     border-bottom-color: transparent;
+    /* OPENING: corners point immediately */
+    transition: border-radius .3s cubic-bezier(0.16, 1, 0.3, 1) 0s, border-bottom-color .3s ease 0s, box-shadow .3s ease 0s, border-color .3s ease 0s, background .3s ease 0s;
   }
 
   .site-header .wrap.nav-expanded::before {
     border-radius: 22px 22px 0 0;
+    /* OPENING: corners point immediately */
+    transition: border-radius .3s cubic-bezier(0.16, 1, 0.3, 1) 0s;
   }
 
   .site-header .wrap::before {
-    transition: border-radius .4s cubic-bezier(0.16, 1, 0.3, 1);
+    /* CLOSING: corners round immediately */
+    transition: border-radius .35s cubic-bezier(0.16, 1, 0.3, 1) 0s;
   }
 
   nav.primary-nav {
@@ -1298,8 +1304,8 @@ details[open] .event-summary .chev {
     overflow: hidden;
     opacity: 0;
     pointer-events: none;
-    /* perfectly synced closing animation */
-    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    /* CLOSING: menu shrinks immediately (delay 0s, original duration 0.3s) */
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0s, opacity 0.25s ease 0s;
   }
 
   /* glass highlight on the dropdown too */
@@ -1317,8 +1323,8 @@ details[open] .event-summary .chev {
     max-height: 400px;
     opacity: 1;
     pointer-events: auto;
-    /* perfectly synced opening animation */
-    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    /* OPENING: menu waits 0.3s for corners to point, original slower duration 0.55s */
+    transition: max-height 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.3s, opacity 0.3s ease 0.3s;
   }
 
   nav.primary-nav a {
