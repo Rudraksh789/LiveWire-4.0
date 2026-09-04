@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const nav = document.querySelector('.primary-nav');
   if (toggle && nav) {
     const wrap = toggle.closest('.wrap');
+    const header = document.querySelector('.site-header');
+    
+    // Reparent nav to break out of .wrap stacking context for perfect glass blur
+    if (header && window.innerWidth <= 680) {
+      header.appendChild(nav);
+    }
+
     toggle.addEventListener('click', () => {
       nav.classList.toggle('is-open');
       const open = nav.classList.contains('is-open');
