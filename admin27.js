@@ -13,6 +13,38 @@ const firebaseConfig = {
   appId: "1:1085354777077:web:775d32b8c561c2862368bc"
 };
 
+// ============================================================
+// Google Sheets Live Sync
+// ============================================================
+// 1. Paste your deployed Apps Script Web App URL below (see setup guide).
+// 2. Set the same secret you used in the Apps Script code.
+const SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyZUp9lzj8WvHJIL8RsHbdYz51P5kHt66aJL9f5d_jDZ6NXGm_kqTAurn-9ZxhLK8-LgQ/exec";
+const SHEETS_SYNC_SECRET = "livewire27";
+let sheetsSyncTimer = null;
+
+function syncToGoogleSheet(data) {
+  if (!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL.startsWith("PASTE_")) return; // not configured yet
+
+  // Debounce so a burst of Firestore changes only triggers one push
+  clearTimeout(sheetsSyncTimer);
+  sheetsSyncTimer = setTimeout(() => {
+    const rows = data.map(row => [
+      row.schoolName, row.schoolEmail, row.teacherName, row.teacherPhone, row.teacherEmail,
+      row.event, row.participant, row.pClass, row.section, row.phone, row.email,
+      row.discordId, row.inGameId
+    ]);
+
+    fetch(SHEETS_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids CORS preflight issues with Apps Script
+      body: JSON.stringify({ secret: SHEETS_SYNC_SECRET, rows: rows })
+    })
+      .then(res => res.json())
+      .then(result => console.log("Sheet synced:", result))
+      .catch(err => console.error("Sheet sync failed:", err));
+  }, 800);
+}
+
 let db = null;
 let auth = null;
 
@@ -388,6 +420,7 @@ function fetchData() {
       });
 
       renderTable(allData);
+      syncToGoogleSheet(allData);
     }, (error) => {
       console.error("Error fetching data: ", error);
       tableBody.innerHTML = `<tr><td colspan="11" class="error-msg is-visible">Error loading data. Check console.</td></tr>`;

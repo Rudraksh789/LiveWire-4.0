@@ -1,0 +1,14 @@
+APP SCRIPT FOR SPREADSHEET
+
+
+DEPLOYMENT ID
+AKfycbyZUp9lzj8WvHJIL8RsHbdYz51P5kHt66aJL9f5d_jDZ6NXGm_kqTAurn-9ZxhLK8-LgQ
+
+
+WEB APP URL
+https://script.google.com/macros/s/AKfycbyZUp9lzj8WvHJIL8RsHbdYz51P5kHt66aJL9f5d_jDZ6NXGm_kqTAurn-9ZxhLK8-LgQ/exec
+
+
+
+EMAIL ID
+rudrakshsharma692@gmail.com
