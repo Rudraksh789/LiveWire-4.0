@@ -7,23 +7,60 @@ document.addEventListener('DOMContentLoaded', () => {
   if (toggle && nav) {
     const wrap = toggle.closest('.wrap');
     const header = document.querySelector('.site-header');
-    
+    const NAV_BREAKPOINT = 880;
+
     // Reparent nav to break out of .wrap stacking context for perfect glass blur
-    if (header && window.innerWidth <= 680) {
-      header.appendChild(nav);
+    function syncNavLocation() {
+      if (!header || !wrap) return;
+      if (window.innerWidth <= NAV_BREAKPOINT) {
+        if (nav.parentElement !== header) {
+          header.appendChild(nav);
+        }
+      } else {
+        if (nav.parentElement !== wrap) {
+          wrap.insertBefore(nav, toggle);
+        }
+        nav.classList.remove('is-open');
+        wrap.classList.remove('nav-expanded');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
     }
 
-    toggle.addEventListener('click', () => {
+    syncNavLocation();
+    window.addEventListener('resize', syncNavLocation);
+
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
       nav.classList.toggle('is-open');
       const open = nav.classList.contains('is-open');
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (wrap) wrap.classList.toggle('nav-expanded', open);
     });
+
     nav.querySelectorAll('a').forEach(a => {
       a.addEventListener('click', () => {
         nav.classList.remove('is-open');
         if (wrap) wrap.classList.remove('nav-expanded');
+        toggle.setAttribute('aria-expanded', 'false');
       });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (nav.classList.contains('is-open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
+        nav.classList.remove('is-open');
+        if (wrap) wrap.classList.remove('nav-expanded');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Close menu on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav.classList.contains('is-open')) {
+        nav.classList.remove('is-open');
+        if (wrap) wrap.classList.remove('nav-expanded');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
     });
   }
 

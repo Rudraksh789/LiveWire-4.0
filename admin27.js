@@ -2,10 +2,6 @@
 // LiveWire 4.0 — Admin Dashboard Logic
 // ============================================================
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, getDocs, deleteDoc, doc, getDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
 // Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBE2Qu3N2QZPbdSQKsvTwOeGym_R-3qnHM",
@@ -17,26 +13,17 @@ const firebaseConfig = {
   appId: "1:1085354777077:web:775d32b8c561c2862368bc"
 };
 
-let db, auth;
+let db = null;
+let auth = null;
 
 try {
-  const app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
-  auth = getAuth(app);
-  window.firebaseDb = db;
-  window.firebaseAuth = auth;
-  window.firebaseCollection = collection;
-  window.firebaseGetDocs = getDocs;
-  window.firebaseDeleteDoc = deleteDoc;
-  window.firebaseDoc = doc;
-  window.firebaseGetDoc = getDoc;
-  window.firebaseUpdateDoc = updateDoc;
-  window.firebaseSignIn = signInWithEmailAndPassword;
-  window.firebaseOnAuthStateChanged = onAuthStateChanged;
-  window.firebaseSignOut = signOut;
-  window.firebaseOnSnapshot = onSnapshot;
-
-  window.dispatchEvent(new Event('firebaseReady'));
+  if (typeof firebase !== 'undefined' && firebase.initializeApp) {
+    const app = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    auth = firebase.auth();
+    window.firebaseDb = db;
+    window.firebaseAuth = auth;
+  }
 } catch (e) {
   console.error("Firebase initialization failed:", e);
 }
@@ -47,6 +34,7 @@ const adminDashboard = document.getElementById('adminDashboard');
 const loginForm = document.getElementById('loginForm');
 const adminPassword = document.getElementById('adminPassword');
 const btnLogin = document.getElementById('btnLogin');
+const btnTogglePass = document.getElementById('btnTogglePass');
 const loginError = document.getElementById('loginError');
 const btnLogout = document.getElementById('btnLogout');
 const searchInput = document.getElementById('searchInput');
@@ -98,9 +86,12 @@ function triggerError(message) {
   }
 }
 
-// Reset error when user types
-adminPassword.addEventListener('input', () => {
-  btnLogin.disabled = adminPassword.value.trim().length === 0;
+// Enable/disable Unlock button & clear error state when typing
+function syncLoginButton() {
+  if (!adminPassword || !btnLogin) return;
+  const val = adminPassword.value.trim();
+  btnLogin.disabled = val.length === 0;
+
   if (adminPassword.classList.contains('input-error')) {
     adminPassword.classList.remove('input-error');
   }
@@ -108,19 +99,49 @@ adminPassword.addEventListener('input', () => {
   if (errorBadge && errorBadge.classList.contains('is-visible')) {
     errorBadge.classList.remove('is-visible');
   }
-});
+}
 
-// Handle Enter key on empty field
-adminPassword.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && adminPassword.value.trim().length === 0) {
+if (adminPassword) {
+  adminPassword.addEventListener('input', syncLoginButton);
+  adminPassword.addEventListener('keyup', syncLoginButton);
+  adminPassword.addEventListener('change', syncLoginButton);
+
+  // Handle Enter key on empty field
+  adminPassword.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && adminPassword.value.trim().length === 0) {
+      e.preventDefault();
+      triggerError('Please enter password to unlock.');
+    }
+  });
+
+  // Run immediately on page load in case browser pre-fills
+  syncLoginButton();
+}
+
+// Animated Eye Toggle for Show/Hide Password
+if (btnTogglePass && adminPassword) {
+  btnTogglePass.addEventListener('click', (e) => {
     e.preventDefault();
-    triggerError('Please enter password to unlock.');
-  }
-});
+    const isPass = adminPassword.type === 'password';
+    adminPassword.type = isPass ? 'text' : 'password';
+
+    // Toggle styling & animation classes
+    btnTogglePass.classList.toggle('is-visible', isPass);
+    btnTogglePass.classList.remove('animate-pop');
+    void btnTogglePass.offsetWidth; // Force reflow to replay CSS keyframe
+    btnTogglePass.classList.add('animate-pop');
+
+    btnTogglePass.setAttribute('title', isPass ? 'Hide password' : 'Show password');
+    btnTogglePass.setAttribute('aria-label', isPass ? 'Hide password' : 'Show password');
+
+    adminPassword.focus();
+  });
+}
 
 // Auth state observer
 function setupAuth() {
-  onAuthStateChanged(auth, (user) => {
+  if (!auth) return;
+  auth.onAuthStateChanged((user) => {
     if (user) {
       isDev = user.email === 'dev@livewire.com';
       const errorBadge = document.getElementById('loginError');
@@ -137,67 +158,90 @@ function setupAuth() {
 
 if (auth) {
   setupAuth();
-} else {
-  window.addEventListener('firebaseReady', setupAuth);
 }
 
 // Login Submit
-loginForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const pwd = adminPassword.value.trim();
+if (loginForm) {
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const pwd = adminPassword.value.trim();
 
-  if (!pwd) {
-    triggerError('Please enter password to unlock.');
-    return;
-  }
+    if (!pwd) {
+      triggerError('Please enter password to unlock.');
+      return;
+    }
 
-  let emailToTry = '';
-  if (pwd === 'dev.lab.27') {
-    emailToTry = 'dev@livewire.com';
-  } else if (pwd === 'wired.lab.27') {
-    emailToTry = 'admin@livewire.com';
-  } else {
-    triggerError('Access Denied · Incorrect Password');
-    return;
-  }
+    let emailToTry = '';
+    if (pwd === 'dev.lab.27') {
+      emailToTry = 'dev@livewire.com';
+    } else if (pwd === 'wired.lab.27') {
+      emailToTry = 'admin@livewire.com';
+    } else {
+      triggerError('Access Denied · Incorrect Password');
+      return;
+    }
 
-  btnLogin.disabled = true;
-  btnLogin.textContent = 'Authenticating...';
+    btnLogin.disabled = true;
+    btnLogin.textContent = 'Authenticating...';
 
-  signInWithEmailAndPassword(auth, emailToTry, pwd)
-    .then(() => {
-      adminPassword.value = '';
-      btnLogin.disabled = false;
-      btnLogin.textContent = 'Unlock Database';
-    })
-    .catch((error) => {
-      btnLogin.disabled = false;
-      btnLogin.textContent = 'Unlock Database';
-      triggerError('Authentication Failed · Check Credentials');
-    });
-});
+    if (!auth) {
+      // Offline / fallback demo mode
+      setTimeout(() => {
+        isDev = pwd === 'dev.lab.27';
+        unlockDashboard();
+      }, 500);
+      return;
+    }
 
-// Logout
-btnLogout.addEventListener('click', () => {
-  if (auth) {
-    signOut(auth)
+    auth.signInWithEmailAndPassword(emailToTry, pwd)
       .then(() => {
-        isUnlocking = false;
-        const transScreen = document.getElementById('transitionScreen');
-        if (transScreen) {
-          transScreen.classList.remove('is-active', 'is-fading');
-          transScreen.style.display = 'none';
-        }
-        adminDashboard.classList.remove('is-visible');
-        loginOverlay.classList.remove('is-exiting', 'is-hidden');
-        loginOverlay.style.display = 'flex';
         adminPassword.value = '';
-        btnLogin.disabled = true;
+        syncLoginButton();
         btnLogin.textContent = 'Unlock Database';
       })
-      .catch(err => console.error("Logout failed", err));
-  }
-});
+      .catch((error) => {
+        syncLoginButton();
+        btnLogin.textContent = 'Unlock Database';
+        triggerError('Authentication Failed · Check Credentials');
+      });
+  });
+}
+
+// Logout
+if (btnLogout) {
+  btnLogout.addEventListener('click', () => {
+    if (auth) {
+      auth.signOut()
+        .then(() => {
+          isUnlocking = false;
+          const transScreen = document.getElementById('transitionScreen');
+          if (transScreen) {
+            transScreen.classList.remove('is-active', 'is-fading');
+            transScreen.style.display = 'none';
+          }
+          adminDashboard.classList.remove('is-visible');
+          loginOverlay.classList.remove('is-exiting', 'is-hidden');
+          loginOverlay.style.display = 'flex';
+          adminPassword.value = '';
+          syncLoginButton();
+          btnLogin.textContent = 'Unlock Database';
+        })
+        .catch(err => console.error("Logout failed", err));
+    } else {
+      isUnlocking = false;
+      const transScreen = document.getElementById('transitionScreen');
+      if (transScreen) {
+        transScreen.classList.remove('is-active', 'is-fading');
+        transScreen.style.display = 'none';
+      }
+      adminDashboard.classList.remove('is-visible');
+      loginOverlay.classList.remove('is-exiting', 'is-hidden');
+      loginOverlay.style.display = 'flex';
+      adminPassword.value = '';
+      syncLoginButton();
+    }
+  });
+}
 
 // Cinematic Unlock & Loading Animation Sequence
 function unlockDashboard() {
@@ -218,35 +262,42 @@ function unlockDashboard() {
     loginOverlay.style.display = 'none';
 
     // Step 2: Show transition screen with loader
-    transLoaderWrap.classList.remove('is-done');
-    transWelcomeWrap.classList.remove('is-visible');
-    transLoaderFill.style.width = '0%';
-    transPercent.textContent = '0%';
-    transLoadingText.textContent = 'Decrypting Database Registry...';
-
     transScreen.style.display = 'flex';
-    void transScreen.offsetWidth; // force reflow
+    transScreen.classList.remove('is-fading');
     transScreen.classList.add('is-active');
 
-    // Step 3: Animate loading bar and live percent counter smoothly
+    transLoaderWrap.classList.remove('is-done');
+    transWelcomeWrap.classList.remove('is-visible');
+
+    // Step 3: Run cybernetic progress bar animation (0% -> 100%)
+    let progress = 0;
+    const duration = 1400; // 1.4s smooth progress
     const startTime = performance.now();
-    const duration = 1800; // 1.8 seconds loading progress
+
+    const statusMessages = [
+      { at: 0, text: 'DECRYPTING ARCHIVES...' },
+      { at: 35, text: 'VERIFYING SECURITY TOKENS...' },
+      { at: 70, text: 'INITIALIZING DATA STREAM...' },
+      { at: 92, text: 'ACCESS GRANTED' }
+    ];
 
     function animateLoader(now) {
       const elapsed = now - startTime;
       const p = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3); // Cubic ease-out
-      const progress = Math.round(eased * 100);
 
-      transLoaderFill.style.width = `${progress}%`;
-      transPercent.textContent = `${progress}%`;
+      // Smooth ease-out cubic
+      const eased = 1 - Math.pow(1 - p, 3);
+      progress = Math.round(eased * 100);
 
-      if (progress > 40 && progress < 78) {
-        transLoadingText.textContent = 'Verifying Security Tokens...';
-      } else if (progress >= 78 && progress < 100) {
-        transLoadingText.textContent = 'Authorizing Registry Access...';
-      } else if (progress === 100) {
-        transLoadingText.textContent = 'Access Granted!';
+      transLoaderFill.style.width = progress + '%';
+      transPercent.textContent = progress + '%';
+
+      // Update cyber status messages
+      for (let i = statusMessages.length - 1; i >= 0; i--) {
+        if (progress >= statusMessages[i].at) {
+          transLoadingText.textContent = statusMessages[i].text;
+          break;
+        }
       }
 
       if (p < 1) {
@@ -269,11 +320,7 @@ function unlockDashboard() {
               adminDashboard.classList.add('is-visible');
               if (isDev && thActions) thActions.style.display = 'table-cell';
 
-              if (db) {
-                fetchData();
-              } else {
-                window.addEventListener('firebaseReady', fetchData);
-              }
+              fetchData();
               isUnlocking = false;
             }, 650);
           }, 1400); // 1.4s of welcome message
@@ -292,8 +339,12 @@ function unlockDashboard() {
 function fetchData() {
   try {
     if (unsubscribe) unsubscribe();
+    if (!db) {
+      tableBody.innerHTML = `<tr><td colspan="11" class="empty-state">Firebase offline or connecting...</td></tr>`;
+      return;
+    }
 
-    unsubscribe = onSnapshot(collection(db, "registrations"), (querySnapshot) => {
+    unsubscribe = db.collection("registrations").onSnapshot((querySnapshot) => {
       allData = [];
 
       querySnapshot.forEach((docSnap) => {
@@ -349,6 +400,7 @@ function fetchData() {
 
 // Render Table Rows
 function renderTable(data) {
+  if (!tableBody) return;
   if (data.length === 0) {
     tableBody.innerHTML = `<tr><td colspan="11" class="empty-state">No registrations found.</td></tr>`;
     return;
@@ -374,18 +426,19 @@ function renderTable(data) {
 // Delete Registration (Single Participant Slot)
 window.deleteReg = async function (docId, eventId, pIndex) {
   if (!confirm("Are you sure you want to delete this specific participant?")) return;
+  if (!db) return alert("Firebase is not connected.");
 
   try {
-    const docRef = doc(db, "registrations", docId);
-    const docSnap = await getDoc(docRef);
+    const docRef = db.collection("registrations").doc(docId);
+    const docSnap = await docRef.get();
 
-    if (docSnap.exists()) {
+    if (docSnap.exists) {
       const data = docSnap.data();
       const events = data.events || {};
 
       if (events[eventId] && events[eventId][pIndex]) {
         events[eventId][pIndex] = { fullName: "", class: "", section: "", phone: "", email: "", discordId: "", inGameId: "" };
-        await updateDoc(docRef, { events: events });
+        await docRef.update({ events: events });
         alert("Participant deleted successfully.");
       } else {
         alert("Participant data not found in document.");
@@ -398,64 +451,68 @@ window.deleteReg = async function (docId, eventId, pIndex) {
 };
 
 // Search Filter
-searchInput.addEventListener('input', (e) => {
-  const q = e.target.value.toLowerCase();
-  const filtered = allData.filter(row => {
-    return Object.values(row).some(val =>
-      String(val).toLowerCase().includes(q)
-    );
+if (searchInput) {
+  searchInput.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
+    const filtered = allData.filter(row => {
+      return Object.values(row).some(val =>
+        String(val).toLowerCase().includes(q)
+      );
+    });
+    renderTable(filtered);
   });
-  renderTable(filtered);
-});
+}
 
 // Export CSV
-btnExport.addEventListener('click', () => {
-  if (allData.length === 0) return alert('No data to export!');
+if (btnExport) {
+  btnExport.addEventListener('click', () => {
+    if (allData.length === 0) return alert('No data to export!');
 
-  const headers = ['Doc ID', 'School Name', 'School Email', 'Teacher Name', 'Teacher Phone', 'Teacher Email', 'Event', 'Participant Name', 'Class', 'Section', 'Participant Phone', 'Participant Email', 'Discord ID', 'In Game ID'];
-  const csvRows = [];
-  csvRows.push(headers.join(','));
+    const headers = ['Doc ID', 'School Name', 'School Email', 'Teacher Name', 'Teacher Phone', 'Teacher Email', 'Event', 'Participant Name', 'Class', 'Section', 'Participant Phone', 'Participant Email', 'Discord ID', 'In Game ID'];
+    const csvRows = [];
+    csvRows.push(headers.join(','));
 
-  const currentData = searchInput.value ? allData.filter(row => Object.values(row).some(val => String(val).toLowerCase().includes(searchInput.value.toLowerCase()))) : allData;
+    const currentData = searchInput && searchInput.value ? allData.filter(row => Object.values(row).some(val => String(val).toLowerCase().includes(searchInput.value.toLowerCase()))) : allData;
 
-  function sanitizeCsvField(value, forceText = false) {
-    let str = String(value || "");
-    if (forceText && !str.startsWith("'")) {
-      str = "'" + str;
-    } else if (/^[=+\-@\t\r]/.test(str)) {
-      str = "'" + str;
+    function sanitizeCsvField(value, forceText = false) {
+      let str = String(value || "");
+      if (forceText && !str.startsWith("'")) {
+        str = "'" + str;
+      } else if (/^[=+\-@\t\r]/.test(str)) {
+        str = "'" + str;
+      }
+      return `"${str.replace(/"/g, '""')}"`;
     }
-    return `"${str.replace(/"/g, '""')}"`;
-  }
 
-  for (const row of currentData) {
-    const values = [
-      sanitizeCsvField(row.docId),
-      sanitizeCsvField(row.schoolName),
-      sanitizeCsvField(row.schoolEmail),
-      sanitizeCsvField(row.teacherName),
-      sanitizeCsvField(row.teacherPhone, true),
-      sanitizeCsvField(row.teacherEmail),
-      sanitizeCsvField(row.event),
-      sanitizeCsvField(row.participant),
-      sanitizeCsvField(row.pClass),
-      sanitizeCsvField(row.section),
-      sanitizeCsvField(row.phone, true),
-      sanitizeCsvField(row.email),
-      sanitizeCsvField(row.discordId),
-      sanitizeCsvField(row.inGameId)
-    ];
-    csvRows.push(values.join(','));
-  }
+    for (const row of currentData) {
+      const values = [
+        sanitizeCsvField(row.docId),
+        sanitizeCsvField(row.schoolName),
+        sanitizeCsvField(row.schoolEmail),
+        sanitizeCsvField(row.teacherName),
+        sanitizeCsvField(row.teacherPhone, true),
+        sanitizeCsvField(row.teacherEmail),
+        sanitizeCsvField(row.event),
+        sanitizeCsvField(row.participant),
+        sanitizeCsvField(row.pClass),
+        sanitizeCsvField(row.section),
+        sanitizeCsvField(row.phone, true),
+        sanitizeCsvField(row.email),
+        sanitizeCsvField(row.discordId),
+        sanitizeCsvField(row.inGameId)
+      ];
+      csvRows.push(values.join(','));
+    }
 
-  const csvString = csvRows.join('\n');
-  const blob = new Blob([csvString], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.setAttribute('hidden', '');
-  a.setAttribute('href', url);
-  a.setAttribute('download', 'LiveWire_Registrations.csv');
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-});
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('hidden', '');
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'LiveWire_Registrations.csv');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+}

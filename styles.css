@@ -306,6 +306,7 @@ nav.primary-nav {
   display: flex;
   align-items: center;
   gap: 2px;
+  flex-shrink: 0;
 }
 
 nav.primary-nav a {
@@ -317,6 +318,8 @@ nav.primary-nav a {
   padding: 9px 13px;
   border-radius: 999px;
   transition: color .2s ease, background .2s ease, box-shadow .2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 nav.primary-nav a:hover {
@@ -332,13 +335,26 @@ nav.primary-nav a.is-active {
 
 .nav-toggle {
   display: none;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: all .2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--green);
+  transform: scale(1.05);
 }
 
 /* ---------------- Buttons ---------------- */
@@ -1251,7 +1267,8 @@ details[open] .event-summary .chev {
   }
 }
 
-@media (max-width: 680px) {
+/* ---------------- Mobile Header & Navigation (<= 880px) ---------------- */
+@media (max-width: 880px) {
   .site-header .wrap {
     border-radius: 999px;
     /* CLOSING: corners round immediately as menu shrinks */
@@ -1377,9 +1394,12 @@ details[open] .event-summary .chev {
   }
 
   .nav-toggle {
-    display: block;
+    display: inline-flex;
   }
+}
 
+/* ---------------- Mobile Grids (<= 680px) ---------------- */
+@media (max-width: 680px) {
   .grid-3,
   .grid-2,
   .grid-2x2 {

@@ -1,8 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
 // ============================================================
-// Firebase Setup
+// Firebase Setup (Compat mode — works on web and file:/// protocol)
 // ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyBE2Qu3N2QZPbdSQKsvTwOeGym_R-3qnHM",
@@ -14,19 +11,15 @@ const firebaseConfig = {
   appId: "1:1085354777077:web:775d32b8c561c2862368bc"
 };
 
-window.firebaseConfig = firebaseConfig; // Make available globally to check if replaced
+window.firebaseConfig = firebaseConfig; // Make available globally
 
 let db = null;
 try {
-  const app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
-
-  // Export functions globally so scripts / window can reference them if needed
-  window.firebaseDb = db;
-  window.firebaseCollection = collection;
-  window.firebaseSetDoc = setDoc;
-  window.firebaseDoc = doc;
-  window.firebaseTimestamp = serverTimestamp;
+  if (typeof firebase !== 'undefined' && firebase.initializeApp) {
+    const app = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    window.firebaseDb = db;
+  }
 } catch (e) {
   console.error("Firebase init failed:", e);
 }
@@ -544,11 +537,15 @@ try {
       const teacherPhone = document.getElementById('teacherPhone').value.trim();
       const teacherEmail = document.getElementById('teacherEmail').value.trim();
 
+      const timestamp = (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue)
+        ? firebase.firestore.FieldValue.serverTimestamp()
+        : new Date().toISOString();
+
       const payload = {
         school: { name: schoolName, email: schoolEmail },
         teacher: { name: teacherName, phone: teacherPhone, email: teacherEmail },
         events: registrations,
-        timestamp: (window.firebaseTimestamp ? window.firebaseTimestamp() : (serverTimestamp ? serverTimestamp() : new Date().toISOString()))
+        timestamp: timestamp
       };
 
       // Visual feedback - Loading state
@@ -558,15 +555,13 @@ try {
       btnFinal.style.color = '#fff';
 
       try {
-        const activeDb = window.firebaseDb || db;
-        const activeSetDoc = window.firebaseSetDoc || setDoc;
-        const activeDoc = window.firebaseDoc || doc;
+        const activeDb = window.firebaseDb || db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
 
-        if (activeDb && activeSetDoc && window.firebaseConfig && window.firebaseConfig.apiKey !== "YOUR_API_KEY") {
-          const docRef = activeDoc(activeDb, "registrations", sessionId);
+        if (activeDb && window.firebaseConfig && window.firebaseConfig.apiKey !== "YOUR_API_KEY") {
+          const docRef = activeDb.collection("registrations").doc(sessionId);
 
           // Wrap the Firebase call in a timeout so it doesn't hang forever
-          const savePromise = activeSetDoc(docRef, payload);
+          const savePromise = docRef.set(payload);
           const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout: Database didn't respond.")), 5000));
 
           await Promise.race([savePromise, timeoutPromise]);
