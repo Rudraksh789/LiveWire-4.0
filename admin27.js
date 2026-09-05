@@ -23,7 +23,7 @@ const SHEETS_SYNC_SECRET = "livewire27";
 let sheetsSyncTimer = null;
 
 function syncToGoogleSheet(data) {
-  if (!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL.startsWith("https://script.google.com/macros/s/AKfycbyZUp9lzj8WvHJIL8RsHbdYz51P5kHt66aJL9f5d_jDZ6NXGm_kqTAurn-9ZxhLK8-LgQ/exec")) return; // not configured yet
+  if (!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL.startsWith("PASTE_")) return; // not configured yet
 
   // Debounce so a burst of Firestore changes only triggers one push
   clearTimeout(sheetsSyncTimer);
