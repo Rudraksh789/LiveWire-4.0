@@ -169,25 +169,6 @@
       margin-bottom: 32px;
     }
 
-    /* Responsive: stack on mobile */
-    @media (max-width: 768px) {
-      .login-layout {
-        flex-direction: column;
-        gap: 32px;
-        height: auto;
-        padding: 40px 0;
-      }
-
-      .login-logo-side .circuit-stage {
-        max-width: 260px;
-      }
-
-      .login-card {
-        padding: 36px 28px;
-        max-width: 400px;
-      }
-    }
-
     .login-card {
       box-sizing: border-box;
     }
@@ -568,7 +549,9 @@
     .table-container {
       position: relative;
       border-radius: 20px;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
       /* liquid-glass */
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02) 40%, rgba(255, 255, 255, 0.04)),
@@ -583,6 +566,25 @@
         inset 0 -1px 0 rgba(255, 255, 255, 0.04),
         inset 0 0 20px rgba(124, 92, 255, 0.06);
       animation: tableSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+    }
+
+    /* Smooth custom scrollbar for table container */
+    .table-container::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 999px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+      background: rgba(124, 92, 255, 0.35);
+      border-radius: 999px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: var(--green);
     }
 
     .table-container::before {
@@ -1037,6 +1039,225 @@
       0% { opacity: 0; transform: translateY(10px); }
       100% { opacity: 1; transform: translateY(0); }
     }
+
+    /* Mobile scroll hint helper */
+    .mobile-scroll-hint {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 12px;
+      padding: 8px 14px;
+      background: rgba(34, 229, 168, 0.08);
+      border-radius: 999px;
+      border: 1px dashed rgba(34, 229, 168, 0.35);
+    }
+
+    .admin-btn-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    /* ====== Mobile & Responsive Optimizations ====== */
+    @media (max-width: 900px) {
+      .login-layout {
+        gap: 40px;
+        width: 95%;
+      }
+      .admin-dashboard {
+        padding: 24px 16px 40px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      /* Mobile Login Experience */
+      .login-overlay {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 24px 16px 40px;
+        align-items: flex-start;
+      }
+
+      .login-layout {
+        flex-direction: column;
+        gap: 20px;
+        height: auto;
+        min-height: auto;
+        width: 100%;
+        max-width: 420px;
+        padding: 10px 0 20px;
+        margin: auto;
+      }
+
+      .login-logo-side {
+        width: 100%;
+      }
+
+      .login-logo-side .circuit-stage {
+        max-width: 190px;
+      }
+
+      .login-card {
+        padding: 32px 20px 28px;
+        max-width: 100%;
+        border-radius: 20px;
+      }
+
+      .login-card h3 {
+        font-size: 26px;
+      }
+
+      .login-card .login-subtitle {
+        margin-bottom: 24px;
+      }
+
+      .admin-input {
+        padding: 14px 18px;
+        font-size: 14px;
+        margin-bottom: 18px;
+      }
+
+      .login-card .btn-submit {
+        padding: 14px;
+        font-size: 13px;
+      }
+
+      /* Mobile Transition Screen */
+      .trans-cyber-spinner {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 18px;
+      }
+
+      .transition-text-loading {
+        font-size: 11px;
+        margin-bottom: 14px;
+      }
+
+      .transition-loader-track {
+        width: 270px;
+        max-width: 82vw;
+      }
+
+      .trans-auth-badge {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 16px;
+      }
+
+      .transition-welcome {
+        font-size: clamp(28px, 8vw, 44px);
+      }
+
+      .transition-subtitle {
+        font-size: 11px;
+        padding: 5px 14px;
+      }
+
+      /* Mobile Admin Dashboard */
+      .admin-dashboard {
+        padding: 14px 10px 36px;
+      }
+
+      .admin-header {
+        border-radius: 20px;
+        padding: 16px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+
+      .admin-header::before {
+        border-radius: 20px;
+      }
+
+      .admin-header h2 {
+        font-size: 20px;
+        text-align: center;
+      }
+
+      .admin-controls {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .search-box {
+        width: 100%;
+        font-size: 13px;
+        padding: 10px 16px;
+      }
+
+      .admin-btn-group {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+      }
+
+      .admin-controls .btn-submit,
+      .admin-controls .btn-back {
+        flex: 1;
+        text-align: center;
+        padding: 10px 8px;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      /* Mobile Table Enhancements */
+      .mobile-scroll-hint {
+        display: flex;
+      }
+
+      .table-container {
+        border-radius: 16px;
+      }
+
+      .admin-table {
+        font-size: 13px;
+      }
+
+      .admin-table th,
+      .admin-table td {
+        padding: 12px 14px;
+      }
+
+      .btn-delete {
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .login-card {
+        padding: 24px 16px 22px;
+      }
+
+      .admin-dashboard {
+        padding: 10px 6px 30px;
+      }
+
+      .admin-header {
+        padding: 14px 12px;
+      }
+
+      .admin-header h2 {
+        font-size: 18px;
+      }
+
+      .admin-controls .btn-submit,
+      .admin-controls .btn-back {
+        padding: 8px 6px;
+        font-size: 10px;
+      }
+    }
   </style>
 </head>
 
@@ -1186,7 +1407,7 @@
           <polyline points="9 12 11.5 14.5 15.5 9.5"/>
         </svg>
       </div>
-      <h2 class="transition-welcome" id="transWelcome">Welcome, <span class="welcome-name" id="transWelcomeName">Admin</span></h2>
+      <h2 class="transition-welcome" id="transWelcome"><span class="welcome-name">Welcome</span></h2>
       <p class="transition-subtitle" id="transSubtitle">Access Granted · LiveWire 4.0 Registry</p>
     </div>
   </div>
@@ -1197,9 +1418,16 @@
       <h2>Registrations Database</h2>
       <div class="admin-controls">
         <input type="text" id="searchInput" class="search-box" placeholder="Search name, school, event...">
-        <button class="btn-submit" id="btnExport" style="padding: 10px 20px;">Export to Excel</button>
-        <button class="btn-back" id="btnLogout" style="padding: 10px 20px;">Logout</button>
+        <div class="admin-btn-group">
+          <button class="btn-submit" id="btnExport">Export to Excel</button>
+          <button class="btn-back" id="btnLogout">Logout</button>
+        </div>
       </div>
+    </div>
+
+    <!-- Mobile horizontal swipe hint -->
+    <div class="mobile-scroll-hint" aria-hidden="true">
+      <span>⟷ Swipe horizontally to view all columns</span>
     </div>
 
     <div class="table-container">
@@ -1439,11 +1667,6 @@
       const transPercent = document.getElementById('transPercent');
       const transLoadingText = document.getElementById('transLoadingText');
       const transWelcomeWrap = document.getElementById('transWelcomeWrap');
-      const transWelcomeName = document.getElementById('transWelcomeName');
-
-      if (transWelcomeName) {
-        transWelcomeName.textContent = isDev ? 'Developer' : 'Admin';
-      }
 
       // Step 1: Animate login screen elements away (scale down, blur, fade)
       loginOverlay.classList.add('is-exiting');
