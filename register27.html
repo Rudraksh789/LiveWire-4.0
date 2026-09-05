@@ -94,19 +94,21 @@
       font-size: 12px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--ink-mute);
-      padding: 8px 18px;
+      font-weight: 600;
+      color: #06140f;
+      padding: 10px 20px;
       border-radius: 999px;
-      border: 1px solid var(--line);
-      background: transparent;
+      border: none;
+      background: linear-gradient(120deg, var(--green), #16c390);
       transition: all 0.2s ease;
       text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 0 0 0 rgba(34, 229, 168, 0);
     }
 
     .reg-navbar .btn-home:hover {
-      color: var(--green);
-      border-color: var(--green);
-      background: rgba(34, 229, 168, 0.06);
+      box-shadow: 0 6px 24px -4px rgba(34, 229, 168, 0.55);
+      transform: translateY(-1px);
     }
 
     .reg-navbar .btn-home svg {
@@ -1172,13 +1174,13 @@
 
   <!-- Bottom Floating Pill -->
   <div class="bottom-bar" id="bottomBar">
-      <div class="bottom-bar-info">
-        <span class="bottom-bar-count" id="bottomBarCount"><strong>0</strong> / 14 events registered</span>
-        <div class="bottom-bar-dots" id="bottomBarDots">
-          <!-- 14 dots rendered by JS -->
-        </div>
+    <div class="bottom-bar-info">
+      <span class="bottom-bar-count" id="bottomBarCount"><strong>0</strong> / 14 events registered</span>
+      <div class="bottom-bar-dots" id="bottomBarDots">
+        <!-- 14 dots rendered by JS -->
       </div>
-      <button class="btn-final-submit" id="btnFinalSubmit" disabled>Submit All Registrations</button>
+    </div>
+    <button class="btn-final-submit" id="btnFinalSubmit" disabled>Submit All Registrations</button>
   </div>
 
   <!-- Shared script (for cursor etc.) -->
@@ -1223,7 +1225,7 @@
     // ============================================================
     (function () {
       'use strict';
-      
+
       // ---- Session ID for Idempotency ----
       let sessionId = localStorage.getItem('livewire_reg_session_id');
       if (!sessionId) {
@@ -1735,7 +1737,7 @@
             const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout: Database didn't respond.")), 5000));
 
             await Promise.race([savePromise, timeoutPromise]);
-            
+
             // Clear session ID after successful submission so next form uses a fresh ID
             localStorage.removeItem('livewire_reg_session_id');
           } else {
