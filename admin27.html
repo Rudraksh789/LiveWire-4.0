@@ -33,12 +33,12 @@
       z-index: 0;
     }
 
-    /* Login Overlay */
+    /* Login Overlay — transparent to show matrix */
     .login-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(10, 15, 23, 0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(10, 14, 20, 0.55);
+      backdrop-filter: blur(2px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -51,86 +51,426 @@
       pointer-events: none;
     }
 
+    /* Side-by-side login layout — full screen */
+    .login-layout {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+      max-width: 1400px;
+      width: 92%;
+      height: 90vh;
+    }
+
+    .login-logo-side {
+      flex: 1.2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-logo-side .circuit-stage {
+      width: 100%;
+      max-width: 520px;
+      aspect-ratio: 1 / 1;
+    }
+
+    .login-logo-side .circuit-stage svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .login-form-side {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Liquid-glass login card — enlarged */
     .login-card {
-      background: var(--surface-1);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 48px 40px;
+      position: relative;
       width: 100%;
-      max-width: 400px;
+      max-width: 480px;
+      padding: 56px 48px;
       text-align: center;
-      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+      border-radius: 24px;
+      /* liquid-glass */
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.07)),
+        rgba(18, 26, 38, 0.5);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      backdrop-filter: blur(12px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow:
+        0 24px 64px -16px rgba(0, 0, 0, 0.6),
+        0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 0 32px rgba(124, 92, 255, 0.1);
+      /* pop-in animation */
+      animation: cardPopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     }
 
-    .modal-card h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 28px;
-      margin-bottom: 24px;
-      color: var(--ink);
+    /* glass highlight */
+    .login-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: linear-gradient(115deg, rgba(255, 255, 255, 0.18) 0%, transparent 35%);
+      pointer-events: none;
+      mix-blend-mode: overlay;
     }
 
-    .admin-input {
-      width: 100%;
-      padding: 14px 16px;
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-sm);
+    @keyframes cardPopIn {
+      0% {
+        opacity: 0;
+        transform: perspective(800px) rotateY(12deg) scale(0.85) translateY(30px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: perspective(800px) rotateY(0deg) scale(1) translateY(0);
+      }
+    }
+
+    /* Stagger the logo animation */
+    .login-logo-side .circuit-stage {
+      animation: logoFadeIn 0.8s ease both;
+      animation-delay: 0.15s;
+    }
+
+    @keyframes logoFadeIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.9) translateX(-20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+      }
+    }
+
+    .login-card h3 {
+      font-family: var(--display);
+      font-size: 34px;
+      font-weight: 700;
       color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .login-card .login-subtitle {
       font-family: var(--mono);
-      font-size: 14px;
-      margin-bottom: 20px;
-      transition: all 0.2s ease;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      margin-bottom: 32px;
+    }
+
+    /* Responsive: stack on mobile */
+    @media (max-width: 768px) {
+      .login-layout {
+        flex-direction: column;
+        gap: 32px;
+        height: auto;
+        padding: 40px 0;
+      }
+
+      .login-logo-side .circuit-stage {
+        max-width: 260px;
+      }
+
+      .login-card {
+        padding: 36px 28px;
+        max-width: 400px;
+      }
+    }
+
+    .login-card {
       box-sizing: border-box;
     }
 
+
+    /* Highlighted input with glow */
+    .admin-input {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(13, 19, 32, 0.6);
+      border: 1.5px solid rgba(124, 92, 255, 0.35);
+      border-radius: 999px;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 15px;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      box-shadow: 0 0 16px -4px rgba(124, 92, 255, 0.2), inset 0 0 12px rgba(124, 92, 255, 0.06);
+      /* entrance animation */
+      animation: inputSlideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+    }
+
+    .admin-input::placeholder {
+      color: var(--ink-dim);
+      letter-spacing: 0.05em;
+    }
+
+    @keyframes inputSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(16px) scale(0.95);
+        box-shadow: 0 0 0 0 rgba(124, 92, 255, 0);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        box-shadow: 0 0 16px -4px rgba(124, 92, 255, 0.2), inset 0 0 12px rgba(124, 92, 255, 0.06);
+      }
+    }
+
+    /* Subtle pulse when idle and focused */
     .admin-input:focus {
       outline: none;
       border-color: var(--green);
-      box-shadow: 0 0 0 3px rgba(34, 229, 168, 0.15), 0 0 20px -4px rgba(34, 229, 168, 0.2);
+      box-shadow: 0 0 0 4px rgba(34, 229, 168, 0.15), 0 0 28px -4px rgba(34, 229, 168, 0.3), inset 0 0 12px rgba(34, 229, 168, 0.06);
+      animation: inputGlowPulse 2s ease-in-out infinite;
     }
 
-    .modal-card .btn-submit {
+    @keyframes inputGlowPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 4px rgba(34, 229, 168, 0.15), 0 0 28px -4px rgba(34, 229, 168, 0.3), inset 0 0 12px rgba(34, 229, 168, 0.06);
+      }
+      50% {
+        box-shadow: 0 0 0 5px rgba(34, 229, 168, 0.2), 0 0 36px -4px rgba(34, 229, 168, 0.4), inset 0 0 16px rgba(34, 229, 168, 0.08);
+      }
+    }
+
+    /* Curved button with hover effects */
+    .login-card .btn-submit {
+      position: relative;
       width: 100%;
-      padding: 14px;
-      font-size: 16px;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #06140f;
+      background: linear-gradient(120deg, var(--green), #16c390);
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 0 0 0 rgba(34, 229, 168, 0);
     }
 
-    /* Dashboard Layout */
+    .login-card .btn-submit:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 36px -6px rgba(34, 229, 168, 0.55), 0 0 20px -4px rgba(34, 229, 168, 0.3);
+    }
+
+    .login-card .btn-submit:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 4px 16px -4px rgba(34, 229, 168, 0.4);
+    }
+
+    /* Shimmer sweep on hover */
+    .login-card .btn-submit::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .login-card .btn-submit:hover::after {
+      left: 100%;
+    }
+
+    .login-card .btn-submit[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* ====== Cybernetic Error & Shake Styles ====== */
+    .login-card.shake-error {
+      animation: cyberShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    @keyframes cyberShake {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      15% { transform: translate3d(-10px, 0, 0) rotate(-1.5deg); }
+      30% { transform: translate3d(8px, 0, 0) rotate(1.2deg); }
+      45% { transform: translate3d(-6px, 0, 0) rotate(-0.8deg); }
+      60% { transform: translate3d(5px, 0, 0) rotate(0.6deg); }
+      75% { transform: translate3d(-3px, 0, 0) rotate(-0.3deg); }
+      90% { transform: translate3d(2px, 0, 0) rotate(0deg); }
+    }
+
+    .admin-input.input-error {
+      border-color: #ff3366 !important;
+      background: rgba(35, 12, 22, 0.7) !important;
+      color: #fff !important;
+      box-shadow: 0 0 0 4px rgba(255, 51, 102, 0.25), 0 0 30px -2px rgba(255, 51, 102, 0.5), inset 0 0 16px rgba(255, 51, 102, 0.2) !important;
+      animation: inputErrorPulse 1.4s ease-in-out infinite alternate !important;
+    }
+
+    @keyframes inputErrorPulse {
+      0% {
+        box-shadow: 0 0 0 4px rgba(255, 51, 102, 0.25), 0 0 25px -2px rgba(255, 51, 102, 0.45), inset 0 0 12px rgba(255, 51, 102, 0.15);
+      }
+      100% {
+        box-shadow: 0 0 0 6px rgba(255, 51, 102, 0.35), 0 0 38px 2px rgba(255, 51, 102, 0.65), inset 0 0 20px rgba(255, 51, 102, 0.25);
+      }
+    }
+
+    /* Liquid Glass Error Badge */
+    .error-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(255, 51, 102, 0.18), rgba(255, 95, 158, 0.08));
+      border: 1px solid rgba(255, 51, 102, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 8px 28px -4px rgba(255, 51, 102, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      color: #ff708f;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transform: translateY(-10px) scale(0.9);
+      transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), max-height 0.35s ease;
+      pointer-events: none;
+    }
+
+    .error-badge.is-visible {
+      opacity: 1;
+      max-height: 80px;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      animation: errorBadgeDrop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes errorBadgeDrop {
+      0% {
+        opacity: 0;
+        transform: translateY(-12px) scale(0.85);
+      }
+      70% {
+        transform: translateY(2px) scale(1.03);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .error-badge-icon {
+      flex-shrink: 0;
+      stroke: #ff3366;
+      animation: iconWiggle 1.5s ease-in-out infinite;
+    }
+
+    @keyframes iconWiggle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.18); filter: drop-shadow(0 0 6px rgba(255, 51, 102, 0.8)); }
+    }
+
+    /* ====== Dashboard Layout ====== */
     .admin-dashboard {
       flex: 1;
-      padding: 48px 32px;
+      padding: 32px 32px 48px;
       max-width: 1600px;
       margin: 0 auto;
       width: 100%;
       box-sizing: border-box;
       display: none;
       opacity: 0;
-      transition: opacity 0.5s ease;
     }
 
     .admin-dashboard.is-visible {
       display: block;
-      animation: fadeIn 0.5s forwards;
+      animation: dashboardSlideIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
-    @keyframes fadeIn {
-      to {
+    @keyframes dashboardSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      100% {
         opacity: 1;
+        transform: translateY(0);
       }
     }
 
+    /* ---- Liquid-glass header bar ---- */
     .admin-header {
+      position: relative;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 32px;
       flex-wrap: wrap;
       gap: 16px;
+      padding: 16px 28px;
+      border-radius: 999px;
+      /* liquid-glass */
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.07)),
+        rgba(18, 26, 38, 0.45);
+      -webkit-backdrop-filter: blur(8px) saturate(180%);
+      backdrop-filter: blur(8px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow:
+        0 12px 36px -12px rgba(0, 0, 0, 0.55),
+        0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 0 24px rgba(124, 92, 255, 0.1);
+      animation: headerSlideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+    }
+
+    .admin-header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: linear-gradient(115deg, rgba(255, 255, 255, 0.16) 0%, transparent 30%);
+      pointer-events: none;
+      mix-blend-mode: overlay;
+    }
+
+    @keyframes headerSlideDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-16px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .admin-header h2 {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 32px;
+      font-size: 28px;
       margin: 0;
       background: linear-gradient(90deg, #fff, #a3a3a3);
       -webkit-background-clip: text;
@@ -139,33 +479,132 @@
 
     .admin-controls {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       align-items: center;
     }
 
+    /* ---- Pill search box ---- */
     .search-box {
-      padding: 10px 16px;
-      background: var(--surface-1);
-      border: 1px solid var(--line);
-      border-radius: 6px;
+      padding: 10px 20px;
+      background: rgba(13, 19, 32, 0.5);
+      border: 1px solid rgba(124, 92, 255, 0.3);
+      border-radius: 999px;
       color: var(--ink);
-      font-family: inherit;
+      font-family: var(--mono);
+      font-size: 13px;
       width: 300px;
       box-sizing: border-box;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 0 10px rgba(124, 92, 255, 0.05);
+    }
+
+    .search-box::placeholder {
+      color: var(--ink-dim);
     }
 
     .search-box:focus {
       outline: none;
-      border-color: var(--violet);
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(34, 229, 168, 0.12), 0 0 20px -4px rgba(34, 229, 168, 0.25);
     }
 
-    /* Table Styles */
+    /* ---- Dashboard buttons ---- */
+    .admin-controls .btn-submit,
+    .admin-controls .btn-back {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 10px 22px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .admin-controls .btn-submit {
+      background: linear-gradient(120deg, var(--green), #16c390);
+      color: #06140f;
+      box-shadow: 0 0 0 0 rgba(34, 229, 168, 0);
+    }
+
+    .admin-controls .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px -6px rgba(34, 229, 168, 0.5);
+    }
+
+    .admin-controls .btn-submit::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .admin-controls .btn-submit:hover::after {
+      left: 100%;
+    }
+
+    .admin-controls .btn-back {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--ink-mute);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .admin-controls .btn-back:hover {
+      border-color: var(--spark);
+      color: var(--spark);
+      background: rgba(255, 95, 158, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* ---- Liquid-glass table container ---- */
     .table-container {
-      background: var(--surface-1);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      overflow-x: auto;
-      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.3);
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      /* liquid-glass */
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02) 40%, rgba(255, 255, 255, 0.04)),
+        rgba(18, 26, 38, 0.5);
+      -webkit-backdrop-filter: blur(8px) saturate(160%);
+      backdrop-filter: blur(8px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        0 20px 60px -16px rgba(0, 0, 0, 0.5),
+        0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+        inset 0 0 20px rgba(124, 92, 255, 0.06);
+      animation: tableSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+    }
+
+    .table-container::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: linear-gradient(115deg, rgba(255, 255, 255, 0.1) 0%, transparent 25%);
+      pointer-events: none;
+      mix-blend-mode: overlay;
+      z-index: 1;
+    }
+
+    @keyframes tableSlideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .admin-table {
@@ -179,11 +618,11 @@
     .admin-table th,
     .admin-table td {
       padding: 16px 20px;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .admin-table th {
-      background: var(--surface-2);
+      background: rgba(255, 255, 255, 0.04);
       color: var(--ink-mute);
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 600;
@@ -192,23 +631,30 @@
       font-size: 12px;
       position: sticky;
       top: 0;
+      backdrop-filter: blur(4px);
     }
 
     .admin-table tr:last-child td {
       border-bottom: none;
     }
 
+    .admin-table tr {
+      transition: background 0.2s ease;
+    }
+
     .admin-table tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(124, 92, 255, 0.04);
     }
 
     .tag-event {
-      background: rgba(34, 229, 168, 0.1);
+      background: rgba(34, 229, 168, 0.12);
       color: var(--green);
-      padding: 4px 8px;
-      border-radius: 4px;
+      padding: 5px 12px;
+      border-radius: 999px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
+      font-size: 11px;
+      letter-spacing: 0.03em;
+      border: 1px solid rgba(34, 229, 168, 0.2);
     }
 
     .tag-id {
@@ -218,9 +664,378 @@
     }
 
     .empty-state {
-      padding: 48px;
+      padding: 64px;
       text-align: center;
-      color: var(--ink-mute);
+      color: var(--ink-dim);
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ---- Delete button (table rows) ---- */
+    .btn-delete {
+      position: relative;
+      overflow: hidden;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 95, 158, 0.4);
+      background: rgba(255, 95, 158, 0.08);
+      color: var(--spark);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 0 0 0 rgba(255, 95, 158, 0);
+    }
+
+    .btn-delete:hover {
+      background: linear-gradient(120deg, var(--spark), #e84588);
+      color: #fff;
+      border-color: transparent;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 24px -4px rgba(255, 95, 158, 0.5);
+    }
+
+    .btn-delete:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: 0 2px 10px -2px rgba(255, 95, 158, 0.4);
+    }
+
+    /* shimmer sweep */
+    .btn-delete::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.4s ease;
+    }
+
+    .btn-delete:hover::after {
+      left: 100%;
+    }
+
+    /* ====== Login Exit Animations ====== */
+    .login-overlay.is-exiting {
+      pointer-events: none;
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+    }
+
+    .login-overlay.is-exiting .login-card {
+      animation: loginCardExit 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes loginCardExit {
+      0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.88) translateY(-28px);
+        filter: blur(12px);
+      }
+    }
+
+    .login-overlay.is-exiting .login-logo-side {
+      animation: loginLogoExit 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes loginLogoExit {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.9) translateX(-24px);
+        filter: blur(10px);
+      }
+    }
+
+    /* ====== Cinematic Transition Screen ====== */
+    .transition-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 1050;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 45%, rgba(18, 28, 45, 0.97) 0%, #080c14 85%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .transition-screen.is-active {
+      display: flex;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .transition-screen.is-fading {
+      opacity: 0;
+      transform: scale(1.05);
+      filter: blur(14px);
+      transition: all 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Ambient background breathing glow */
+    .trans-glow-backdrop {
+      position: absolute;
+      width: 550px;
+      height: 550px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(34, 229, 168, 0.12) 0%, rgba(124, 92, 255, 0.08) 45%, transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+      animation: transGlowBreathe 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes transGlowBreathe {
+      0% { transform: scale(0.85); opacity: 0.6; }
+      100% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* ─── Phase 1: Loader Wrap ─── */
+    .trans-loader-wrap {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .trans-loader-wrap.is-done {
+      opacity: 0;
+      transform: scale(0.88) translateY(-18px);
+      filter: blur(8px);
+      pointer-events: none;
+      position: absolute;
+    }
+
+    /* Cyber spinner */
+    .trans-cyber-spinner {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 24px;
+    }
+
+    .trans-cyber-spinner .spinner-svg {
+      width: 100%;
+      height: 100%;
+      animation: spinnerRotate 1.6s linear infinite;
+    }
+
+    @keyframes spinnerRotate {
+      100% { transform: rotate(360deg); }
+    }
+
+    .spinner-track {
+      stroke: rgba(255, 255, 255, 0.08);
+    }
+
+    .spinner-head {
+      stroke: url(#transSpinnerGrad);
+      stroke-linecap: round;
+      stroke-dasharray: 60 120;
+      animation: spinnerHeadPulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes spinnerHeadPulse {
+      0% { stroke-dasharray: 12 120; }
+      50% { stroke-dasharray: 75 120; }
+      100% { stroke-dasharray: 12 120; }
+    }
+
+    .spinner-dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      margin: -6px 0 0 -6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 18px 3px var(--green);
+      animation: spinnerDotPulse 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes spinnerDotPulse {
+      0% { transform: scale(0.7); opacity: 0.5; }
+      100% { transform: scale(1.15); opacity: 1; }
+    }
+
+    /* Loading text */
+    .transition-text-loading {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 18px;
+      text-align: center;
+      min-height: 20px;
+      text-shadow: 0 0 12px rgba(34, 229, 168, 0.3);
+    }
+
+    /* Loading bar track */
+    .transition-loader-track {
+      width: 360px;
+      max-width: 86vw;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 16px rgba(0, 0, 0, 0.4);
+      padding: 1px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Loading bar fill */
+    .transition-loader-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green) 0%, var(--violet) 50%, var(--spark) 100%);
+      box-shadow: 0 0 20px rgba(34, 229, 168, 0.6), 0 0 10px var(--spark);
+      position: relative;
+      overflow: hidden;
+      transition: width 0.15s ease-out;
+    }
+
+    /* Shimmer moving beam */
+    .trans-loader-shimmer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+      animation: barShimmer 1.2s infinite;
+    }
+
+    @keyframes barShimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Percentage counter */
+    .trans-percent-label {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--green);
+      margin-top: 14px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Phase 2: Welcome Wrap ─── */
+    .trans-welcome-wrap {
+      position: relative;
+      z-index: 2;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .trans-welcome-wrap.is-visible {
+      display: flex;
+      animation: welcomeWrapEntrance 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes welcomeWrapEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(28px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .trans-auth-badge {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(34, 229, 168, 0.2), rgba(124, 92, 255, 0.2));
+      border: 2px solid var(--green);
+      color: var(--green);
+      box-shadow: 0 0 32px rgba(34, 229, 168, 0.45), inset 0 0 16px rgba(34, 229, 168, 0.2);
+      margin-bottom: 20px;
+      animation: badgeBounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes badgeBounceIn {
+      0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .transition-welcome {
+      font-family: var(--display);
+      font-size: clamp(34px, 5vw, 56px);
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      margin: 0 0 12px 0;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .transition-welcome .welcome-name {
+      background: linear-gradient(90deg, var(--spark), var(--amber));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+      animation: nameGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes nameGlow {
+      0% { filter: drop-shadow(0 0 12px rgba(255, 95, 158, 0.4)); }
+      100% { filter: drop-shadow(0 0 24px rgba(255, 184, 77, 0.7)); }
+    }
+
+    .transition-subtitle {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(34, 229, 168, 0.1);
+      border: 1px solid rgba(34, 229, 168, 0.3);
+      padding: 6px 18px;
+      border-radius: 999px;
+      box-shadow: 0 0 16px rgba(34, 229, 168, 0.15);
+      margin: 0;
+      animation: subtitlePopIn 0.5s ease 0.2s both;
+    }
+
+    @keyframes subtitlePopIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -231,18 +1046,148 @@
 
   <!-- Login Overlay -->
   <div class="login-overlay" id="loginOverlay">
-    <div class="modal-card"
-      style="text-align: center; padding: 48px 40px; max-width: 420px; box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);">
-      <h3>Admin Access</h3>
-      <form id="loginForm">
-        <!-- Hidden username field so the browser password manager knows how to save it -->
-        <input type="text" name="username" autocomplete="username" value="livewire_admin" style="width:1px; height:1px; opacity:0; position:absolute; left:-9999px;" tabindex="-1" aria-hidden="true">
-        
-        <input type="password" id="adminPassword" name="password" placeholder="Enter Password" class="admin-input" autocomplete="current-password" required
-          style="text-align: center; letter-spacing: 0.1em;">
-        <button type="submit" class="btn-submit" id="btnLogin">Unlock Database</button>
-        <span class="error-msg" id="loginError" style="margin-top:16px; display:block;"></span>
-      </form>
+    <div class="login-layout">
+
+      <!-- Left: Animated Logo -->
+      <div class="login-logo-side">
+        <div class="circuit-stage" aria-hidden="true">
+          <svg viewBox="0 0 480 480" fill="none">
+            <defs>
+              <linearGradient id="traceGrad" x1="80" y1="0" x2="400" y2="480" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ff5f9e" />
+                <stop offset="100%" stop-color="#ffb84d" />
+              </linearGradient>
+              <linearGradient id="dotGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#ff5f9e" />
+                <stop offset="100%" stop-color="#ffb84d" />
+              </linearGradient>
+              <path id="logoL1" d="M 120 120 L 120 360 L 360 360" />
+              <path id="logoL2" d="M 192 48 L 192 288 L 432 288" />
+              <path id="logoL1rev" d="M 360 360 L 120 360 L 120 120" />
+              <path id="logoL2rev" d="M 432 288 L 192 288 L 192 48" />
+            </defs>
+
+            <!-- Left L shape -->
+            <use href="#logoL1" stroke="url(#traceGrad)" stroke-width="36" stroke-linecap="round"
+              stroke-linejoin="miter" fill="none" opacity="0.6" class="trace-draw d1" />
+            <!-- Right L shape -->
+            <use href="#logoL2" stroke="url(#traceGrad)" stroke-width="36" stroke-linecap="round"
+              stroke-linejoin="miter" fill="none" opacity="0.6" class="trace-draw d2" />
+
+            <!-- Corner nodes on left L -->
+            <circle class="node logo-node" cx="120" cy="120" r="5" />
+            <circle class="node logo-node" cx="120" cy="360" r="6" />
+            <circle class="node logo-node" cx="360" cy="360" r="5" />
+            <!-- Corner nodes on right L -->
+            <circle class="node logo-node" cx="192" cy="48" r="5" />
+            <circle class="node logo-node" cx="192" cy="288" r="6" />
+            <circle class="node logo-node" cx="432" cy="288" r="5" />
+
+            <!-- Animated dots on left L -->
+            <circle class="pulse logo-pulse" r="5" fill="url(#dotGrad)">
+              <animateMotion dur="3.6s" repeatCount="indefinite">
+                <mpath href="#logoL1" />
+              </animateMotion>
+            </circle>
+            <circle class="pulse logo-pulse" r="5" fill="url(#dotGrad)">
+              <animateMotion dur="3.6s" begin="1.8s" repeatCount="indefinite">
+                <mpath href="#logoL1rev" />
+              </animateMotion>
+            </circle>
+            <!-- Animated dots on right L -->
+            <circle class="pulse logo-pulse" r="4" fill="url(#dotGrad)">
+              <animateMotion dur="2.8s" begin="0.4s" repeatCount="indefinite">
+                <mpath href="#logoL2" />
+              </animateMotion>
+            </circle>
+            <circle class="pulse logo-pulse" r="4" fill="url(#dotGrad)">
+              <animateMotion dur="2.8s" begin="1.8s" repeatCount="indefinite">
+                <mpath href="#logoL2rev" />
+              </animateMotion>
+            </circle>
+            <!-- Extra small accent dots -->
+            <circle class="pulse logo-pulse-sm" r="3" fill="#ff5f9e">
+              <animateMotion dur="4.5s" begin="0.8s" repeatCount="indefinite">
+                <mpath href="#logoL1" />
+              </animateMotion>
+            </circle>
+            <circle class="pulse logo-pulse-sm" r="3" fill="#ffb84d">
+              <animateMotion dur="3.8s" begin="1.2s" repeatCount="indefinite">
+                <mpath href="#logoL2" />
+              </animateMotion>
+            </circle>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Right: Login Card -->
+      <div class="login-form-side">
+        <div class="login-card">
+          <h3>Admin Access</h3>
+          <p class="login-subtitle">LiveWire 4.0 · Dashboard</p>
+          <form id="loginForm">
+            <!-- Hidden username field for password manager -->
+            <input type="text" name="username" autocomplete="username" value="livewire_admin"
+              style="width:1px; height:1px; opacity:0; position:absolute; left:-9999px;" tabindex="-1"
+              aria-hidden="true">
+
+            <input type="password" id="adminPassword" name="password" placeholder="Enter Password" class="admin-input"
+              autocomplete="current-password" required style="text-align: center; letter-spacing: 0.1em;">
+            <button type="submit" class="btn-submit" id="btnLogin" disabled>Unlock Database</button>
+            <div class="error-badge" id="loginError" role="alert" aria-live="polite">
+              <svg class="error-badge-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span class="error-badge-text" id="loginErrorText">Incorrect password. Access denied.</span>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Transition Screen -->
+  <div class="transition-screen" id="transitionScreen" aria-hidden="true">
+    <div class="trans-glow-backdrop"></div>
+
+    <!-- Phase 1: Loading Sequence -->
+    <div class="trans-loader-wrap" id="transLoaderWrap">
+      <div class="trans-cyber-spinner">
+        <svg viewBox="0 0 50 50" class="spinner-svg">
+          <defs>
+            <linearGradient id="transSpinnerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#22e5a8" />
+              <stop offset="50%" stop-color="#7c5cff" />
+              <stop offset="100%" stop-color="#ff5f9e" />
+            </linearGradient>
+          </defs>
+          <circle class="spinner-track" cx="25" cy="25" r="20" fill="none" stroke-width="3"></circle>
+          <circle class="spinner-head" cx="25" cy="25" r="20" fill="none" stroke-width="3"></circle>
+        </svg>
+        <div class="spinner-dot"></div>
+      </div>
+      <p class="transition-text-loading" id="transLoadingText">Decrypting Database Registry...</p>
+      <div class="transition-loader-track">
+        <div class="transition-loader-fill" id="transLoaderFill">
+          <div class="trans-loader-shimmer"></div>
+        </div>
+      </div>
+      <div class="trans-percent-label" id="transPercent">0%</div>
+    </div>
+
+    <!-- Phase 2: Welcome Sequence -->
+    <div class="trans-welcome-wrap" id="transWelcomeWrap">
+      <div class="trans-auth-badge">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <polyline points="9 12 11.5 14.5 15.5 9.5"/>
+        </svg>
+      </div>
+      <h2 class="transition-welcome" id="transWelcome">Welcome, <span class="welcome-name" id="transWelcomeName">Admin</span></h2>
+      <p class="transition-subtitle" id="transSubtitle">Access Granted · LiveWire 4.0 Registry</p>
     </div>
   </div>
 
@@ -338,7 +1283,49 @@
     const thActions = document.getElementById('thActions');
 
     let allData = [];
-    
+
+    // Real-time error trigger with shake and neon glow
+    function triggerError(message) {
+      const card = document.querySelector('.login-card');
+      const errorBadge = document.getElementById('loginError');
+      const errorText = document.getElementById('loginErrorText');
+
+      if (errorText) errorText.textContent = message;
+      if (errorBadge) errorBadge.classList.add('is-visible');
+
+      if (adminPassword) {
+        adminPassword.classList.add('input-error');
+        adminPassword.focus();
+        adminPassword.select();
+      }
+
+      if (card) {
+        card.classList.remove('shake-error');
+        void card.offsetWidth; // Force reflow to re-trigger CSS shake animation
+        card.classList.add('shake-error');
+      }
+    }
+
+    // Reset error when user types
+    adminPassword.addEventListener('input', () => {
+      btnLogin.disabled = adminPassword.value.trim().length === 0;
+      if (adminPassword.classList.contains('input-error')) {
+        adminPassword.classList.remove('input-error');
+      }
+      const errorBadge = document.getElementById('loginError');
+      if (errorBadge && errorBadge.classList.contains('is-visible')) {
+        errorBadge.classList.remove('is-visible');
+      }
+    });
+
+    // Handle Enter key on empty field
+    adminPassword.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && adminPassword.value.trim().length === 0) {
+        e.preventDefault();
+        triggerError('Please enter password to unlock.');
+      }
+    });
+
     // Note: A dev-only delete role should be added via Firebase custom claims or a Cloud Function later.
     // For now, keeping a single admin role (isDev = true) so delete functionality remains accessible to signed-in admins.
     let isDev = true;
@@ -365,10 +1352,13 @@
         if (user) {
           // If we log in with dev@livewire.com, give dev access.
           isDev = user.email === 'dev@livewire.com';
-          loginError.textContent = '';
+          const errorBadge = document.getElementById('loginError');
+          if (errorBadge) errorBadge.classList.remove('is-visible');
           unlockDashboard();
         } else {
-          loginOverlay.classList.remove('is-hidden');
+          isUnlocking = false;
+          loginOverlay.classList.remove('is-hidden', 'is-exiting');
+          loginOverlay.style.display = 'flex';
           adminDashboard.classList.remove('is-visible');
         }
       });
@@ -383,23 +1373,26 @@
     // Login Logic
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const pwd = adminPassword.value;
-      
+      const pwd = adminPassword.value.trim();
+
+      if (!pwd) {
+        triggerError('Please enter password to unlock.');
+        return;
+      }
+
       let emailToTry = '';
       if (pwd === 'dev.lab.27') {
         emailToTry = 'dev@livewire.com';
       } else if (pwd === 'wired.lab.27') {
         emailToTry = 'admin@livewire.com';
       } else {
-        loginError.textContent = 'Incorrect password.';
-        loginError.classList.add('is-visible');
-        adminPassword.value = '';
+        triggerError('Access Denied · Incorrect Password');
         return;
       }
 
       btnLogin.disabled = true;
-      btnLogin.textContent = 'Signing in...';
-      
+      btnLogin.textContent = 'Authenticating...';
+
       window.firebaseSignIn(window.firebaseAuth, emailToTry, pwd)
         .then(() => {
           adminPassword.value = '';
@@ -409,27 +1402,126 @@
         .catch((error) => {
           btnLogin.disabled = false;
           btnLogin.textContent = 'Unlock Database';
-          loginError.textContent = 'Login failed. Did you create the accounts in Firebase?';
-          loginError.classList.add('is-visible');
-          adminPassword.value = '';
+          triggerError('Authentication Failed · Check Credentials');
         });
     });
 
     btnLogout.addEventListener('click', () => {
       if (window.firebaseAuth) {
-        window.firebaseSignOut(window.firebaseAuth).catch(err => console.error("Logout failed", err));
+        window.firebaseSignOut(window.firebaseAuth)
+          .then(() => {
+            isUnlocking = false;
+            const transScreen = document.getElementById('transitionScreen');
+            if (transScreen) {
+              transScreen.classList.remove('is-active', 'is-fading');
+              transScreen.style.display = 'none';
+            }
+            adminDashboard.classList.remove('is-visible');
+            loginOverlay.classList.remove('is-exiting', 'is-hidden');
+            loginOverlay.style.display = 'flex';
+            adminPassword.value = '';
+            btnLogin.disabled = true;
+            btnLogin.textContent = 'Unlock Database';
+          })
+          .catch(err => console.error("Logout failed", err));
       }
     });
 
+    let isUnlocking = false;
+
     function unlockDashboard() {
-      loginOverlay.classList.add('is-hidden');
-      adminDashboard.classList.add('is-visible');
-      if (isDev) thActions.style.display = 'table-cell';
-      if (window.firebaseDb) {
-        fetchData();
-      } else {
-        window.addEventListener('firebaseReady', fetchData);
+      if (isUnlocking) return;
+      isUnlocking = true;
+
+      const transScreen = document.getElementById('transitionScreen');
+      const transLoaderWrap = document.getElementById('transLoaderWrap');
+      const transLoaderFill = document.getElementById('transLoaderFill');
+      const transPercent = document.getElementById('transPercent');
+      const transLoadingText = document.getElementById('transLoadingText');
+      const transWelcomeWrap = document.getElementById('transWelcomeWrap');
+      const transWelcomeName = document.getElementById('transWelcomeName');
+
+      if (transWelcomeName) {
+        transWelcomeName.textContent = isDev ? 'Developer' : 'Admin';
       }
+
+      // Step 1: Animate login screen elements away (scale down, blur, fade)
+      loginOverlay.classList.add('is-exiting');
+
+      setTimeout(() => {
+        loginOverlay.style.display = 'none';
+
+        // Step 2: Show transition screen with loader
+        transLoaderWrap.classList.remove('is-done');
+        transWelcomeWrap.classList.remove('is-visible');
+        transLoaderFill.style.width = '0%';
+        transPercent.textContent = '0%';
+        transLoadingText.textContent = 'Decrypting Database Registry...';
+
+        transScreen.style.display = 'flex';
+        void transScreen.offsetWidth; // force reflow
+        transScreen.classList.add('is-active');
+
+        // Step 3: Animate loading bar and live percent counter smoothly
+        const startTime = performance.now();
+        const duration = 1800; // 1.8 seconds loading progress
+
+        function animateLoader(now) {
+          const elapsed = now - startTime;
+          const p = Math.min(elapsed / duration, 1);
+          // Cubic ease-out
+          const eased = 1 - Math.pow(1 - p, 3);
+          const progress = Math.round(eased * 100);
+
+          transLoaderFill.style.width = `${progress}%`;
+          transPercent.textContent = `${progress}%`;
+
+          if (progress > 40 && progress < 78) {
+            transLoadingText.textContent = 'Verifying Security Tokens...';
+          } else if (progress >= 78 && progress < 100) {
+            transLoadingText.textContent = 'Authorizing Registry Access...';
+          } else if (progress === 100) {
+            transLoadingText.textContent = 'Access Granted!';
+          }
+
+          if (p < 1) {
+            requestAnimationFrame(animateLoader);
+          } else {
+            // Step 4: Loading complete! Transition from loading bar to welcome animation
+            setTimeout(() => {
+              transLoaderWrap.classList.add('is-done');
+              setTimeout(() => {
+                transWelcomeWrap.classList.add('is-visible');
+              }, 220);
+
+              // Step 5: After welcome display, fade out transition screen and reveal database
+              setTimeout(() => {
+                transScreen.classList.add('is-fading');
+
+                setTimeout(() => {
+                  transScreen.classList.remove('is-active', 'is-fading');
+                  transScreen.style.display = 'none';
+                  adminDashboard.classList.add('is-visible');
+                  if (isDev) thActions.style.display = 'table-cell';
+
+                  if (window.firebaseDb) {
+                    fetchData();
+                  } else {
+                    window.addEventListener('firebaseReady', fetchData);
+                  }
+                  isUnlocking = false;
+                }, 650);
+              }, 1400); // 1.4s of welcome message
+            }, 350);
+          }
+        }
+
+        // Start animation after brief settle
+        setTimeout(() => {
+          requestAnimationFrame(animateLoader);
+        }, 120);
+
+      }, 450); // 450ms for loginOverlay exit animation
     }
 
     let unsubscribe = null;
@@ -513,7 +1605,7 @@
           <td>${row.email}</td>
           <td>${row.discordId}</td>
           <td>${row.inGameId}</td>
-          ${isDev ? `<td><button class="btn-back" onclick="deleteReg('${row.docId}', '${row.eventId}', ${row.pIndex})" style="color:var(--spark); border-color:var(--spark); padding:6px 12px; font-size:10px;">Delete</button></td>` : ''}
+          ${isDev ? `<td><button class="btn-delete" onclick="deleteReg('${row.docId}', '${row.eventId}', ${row.pIndex})">Delete</button></td>` : ''}
         </tr>
       `).join('');
     }
