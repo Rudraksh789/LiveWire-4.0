@@ -149,9 +149,16 @@ function getDoc(docId) {
     headers: { Authorization: 'Bearer ' + token },
     muteHttpExceptions: true
   });
-  if (res.getResponseCode() === 404) return null;
+  const code = res.getResponseCode();
+  if (code !== 200) {
+    console.log('getDoc(' + docId + ') -> HTTP ' + code + ' : ' + res.getContentText());
+  }
+  if (code === 404) return null;
   const json = JSON.parse(res.getContentText());
-  if (!json.fields) return null;
+  if (!json.fields) {
+    console.log('getDoc(' + docId + ') -> response had no "fields": ' + res.getContentText());
+    return null;
+  }
   const obj = {};
   Object.keys(json.fields).forEach(k => obj[k] = fromFirestoreValue(json.fields[k]));
   return obj;
@@ -163,13 +170,17 @@ function patchField(docId, fieldName, value) {
   const fields = {};
   fields[fieldName] = toFirestoreValue(value);
   const url = docUrl(docId) + '?updateMask.fieldPaths=' + encodeURIComponent(fieldName) + '&currentDocument.exists=true';
-  return UrlFetchApp.fetch(url, {
+  const res = UrlFetchApp.fetch(url, {
     method: 'patch',
     contentType: 'application/json',
     headers: { Authorization: 'Bearer ' + token },
     payload: JSON.stringify({ fields: fields }),
     muteHttpExceptions: true
   });
+  const code = res.getResponseCode();
+  console.log('patchField(' + docId + ', ' + fieldName + ') -> HTTP ' + code + ' : ' + res.getContentText());
+  if (code >= 300) console.log('!! patchField FAILED for docId=' + docId + ' field=' + fieldName);
+  return res;
 }
 
 function createDoc(docId, dataObj) {
@@ -178,27 +189,32 @@ function createDoc(docId, dataObj) {
   Object.keys(dataObj).forEach(k => fields[k] = toFirestoreValue(dataObj[k]));
   const url = 'https://firestore.googleapis.com/v1/projects/' + PROJECT_ID +
               '/databases/(default)/documents/registrations?documentId=' + docId;
-  return UrlFetchApp.fetch(url, {
+  const res = UrlFetchApp.fetch(url, {
     method: 'post',
     contentType: 'application/json',
     headers: { Authorization: 'Bearer ' + token },
     payload: JSON.stringify({ fields: fields }),
     muteHttpExceptions: true
   });
+  console.log('createDoc(' + docId + ') -> HTTP ' + res.getResponseCode() + ' : ' + res.getContentText());
+  return res;
 }
 
 // ================== Entry point: Sheet -> Firestore (reconcile) ==================
 // Set this up as a time-driven trigger (Triggers -> Add Trigger -> reconcile -> Time-driven -> every 5 minutes)
 function reconcile() {
+  console.log('>>> RECONCILE FUNCTION ENTERED <<<'); // sanity check — if you don't see even this, logging itself is the problem
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(SHEET_NAME);
+  console.log('Sheet lookup result: ' + (sheet ? 'FOUND (' + sheet.getName() + ')' : 'NULL — check SHEET_NAME matches your tab name exactly'));
   const cache = getOrCreateCacheSheet(ss);
 
   const lastRow = sheet.getLastRow();
-  if (lastRow < 2) return; // nothing but the header
+  if (lastRow < 2) { console.log('reconcile: sheet has no data rows, exiting.'); return; }
 
   const currentRows = sheet.getRange(2, 1, lastRow - 1, 16).getValues();
   const cacheMap = readCacheAsMap(cache);
+  console.log('reconcile: ' + currentRows.length + ' sheet rows, ' + Object.keys(cacheMap).length + ' cached rows');
   const seenKeys = {};
   const docsTouched = {}; // docId -> latest full doc fetched, so we only fetch once per doc per run
 
@@ -218,11 +234,11 @@ function reconcile() {
       const changed = !cached || JSON.stringify(cached.slice(0, 13)) !== JSON.stringify(currentValues);
 
       if (changed) {
-        // EDIT: push this row's fields back into the specific participant slot
+        console.log('reconcile: EDIT detected on row ' + sheetRowNum + ' (docId=' + docId + ', eventId=' + eventIdRaw + ', pIndex=' + pIndex + ')');
         applyEditToFirestore(docId, eventIdRaw, Number(pIndex), currentValues, docsTouched);
       }
     } else {
-      // ADD: brand-new row with no hidden IDs yet
+      console.log('reconcile: possible ADD on row ' + sheetRowNum + ' — school="' + row[0] + '" event="' + row[5] + '" participant="' + row[6] + '"');
       applyAddToFirestore(sheet, sheetRowNum, currentValues, docsTouched);
     }
   });
@@ -230,6 +246,7 @@ function reconcile() {
   // Anything that was in the cache but no longer appears on the sheet = user deleted that row
   Object.keys(cacheMap).forEach(key => {
     if (!seenKeys[key]) {
+      console.log('reconcile: DELETE detected for key ' + key);
       const parts = key.split('|||');
       applyDeleteToFirestore(parts[0], parts[1], Number(parts[2]), docsTouched);
     }
@@ -238,11 +255,12 @@ function reconcile() {
   // Refresh the cache to match what we just processed (prevents reprocessing the same edits next run)
   const refreshedRows = sheet.getRange(2, 1, Math.max(sheet.getLastRow() - 1, 0), 16).getValues();
   writeCache(cache, refreshedRows);
+  console.log('=== reconcile() finished ===');
 }
 
 function applyEditToFirestore(docId, eventId, pIndex, values, docsTouched) {
   const doc = docsTouched[docId] || getDoc(docId);
-  if (!doc) return; // document was deleted/missing — skip safely
+  if (!doc) { console.log('applyEditToFirestore: could not fetch docId=' + docId + ' — see getDoc log above for why. Skipping.'); return; }
   docsTouched[docId] = doc;
 
   if (!doc.events) doc.events = {};
