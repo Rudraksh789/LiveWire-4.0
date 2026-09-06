@@ -12,7 +12,7 @@
     rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="LOGO.jpg">
   <link rel="stylesheet" href="styles.css?v=1788550014842">
-  <link rel="stylesheet" href="register27.css?v=1788631000000">
+  <link rel="stylesheet" href="register27.css?v=1788640000000">
 </head>
 
 <body>
@@ -151,56 +151,107 @@
     </div>
   </div>
 
-  <!-- Success Modal Overlay -->
-  <div class="modal-overlay" id="successOverlay">
-    <div class="modal-card" style="text-align: center; padding: 48px 32px; max-width: 480px;">
-      <div
-        style="width: 72px; height: 72px; border-radius: 50%; background: rgba(34,229,168,0.15); border: 1.5px solid var(--green); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
-        <svg viewBox="0 0 24 24" style="width: 36px; height: 36px; color: var(--green);">
-          <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-      </div>
-      <h3
-        style="font-family: var(--display); font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 16px;">
-        Registration Successful!</h3>
-      <p style="color: var(--ink-mute); margin-bottom: 36px; line-height: 1.5;">Thank you for registering. The details
-        for your school and participants have been successfully submitted.</p>
+  <!-- Liquid Glass Success Modal Overlay -->
+  <div class="modal-overlay submission-overlay" id="successOverlay">
+    <div class="liquid-glass-card success-card" id="successCard">
+      <div class="liquid-aura"></div>
+      <div class="liquid-shimmer"></div>
 
-      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-        <button class="btn-submit" onclick="window.location.href='index.html'" style="padding: 12px 24px;">Return to
-          Home</button>
-        <button class="btn-submit" onclick="window.location.reload()"
-          style="background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 12px 24px;">Register
-          Another</button>
+      <div class="liquid-card-content">
+        <!-- Animated Status Icon Orb -->
+        <div class="liquid-icon-wrapper liquid-stagger-1">
+          <div class="liquid-icon-pulse"></div>
+          <div class="liquid-icon-pulse-2"></div>
+          <div class="liquid-icon-orb">
+            <svg class="liquid-svg-check" viewBox="0 0 24 24" fill="none">
+              <circle class="check-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path class="check-tick" d="M8 12.5L10.5 15L16 9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Status Eyebrow Badge -->
+        <div class="liquid-badge-wrap liquid-stagger-2">
+          <span class="liquid-badge">
+            <span class="liquid-badge-dot"></span>
+            TRANSMISSION CONFIRMED
+          </span>
+        </div>
+
+        <!-- Title & Description -->
+        <h3 class="liquid-title liquid-stagger-3">Registration Successful!</h3>
+        <p class="liquid-desc liquid-stagger-4">
+          Thank you for registering. The details for your school and participant delegates have been successfully recorded.
+        </p>
+
+        <!-- Action Buttons (Original options preserved with heavy liquid animations) -->
+        <div class="liquid-actions liquid-stagger-5">
+          <a href="index.html" class="btn-liquid-primary btn-success-primary">
+            <span>Return to Home</span>
+            <svg class="btn-arrow-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <button type="button" class="btn-liquid-secondary" onclick="window.location.reload()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Register Another</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Error Modal Overlay -->
-  <div class="modal-overlay" id="errorOverlay">
-    <div class="modal-card" style="text-align: center; padding: 48px 32px; max-width: 480px;">
-      <div
-        style="width: 72px; height: 72px; border-radius: 50%; background: rgba(255,95,158,0.15); border: 1.5px solid var(--spark); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
-        <svg viewBox="0 0 24 24" style="width: 36px; height: 36px; color: var(--spark);">
-          <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path>
-        </svg>
-      </div>
-      <h3
-        style="font-family: var(--display); font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 16px;">
-        Submission Failed</h3>
-      <p style="color: var(--ink-mute); margin-bottom: 36px; line-height: 1.5;">We couldn't save your registration. This
-        might be a connection issue or the Firebase database isn't configured yet.</p>
+  <!-- Liquid Glass Error / Not Submitted Modal Overlay -->
+  <div class="modal-overlay submission-overlay" id="errorOverlay">
+    <div class="liquid-glass-card error-card" id="errorCard">
+      <div class="liquid-aura"></div>
+      <div class="liquid-shimmer"></div>
 
-      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-        <button class="btn-submit" onclick="window.location.href='index.html'"
-          style="background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 12px 24px;">Return
-          to Home</button>
-        <button class="btn-submit" onclick="document.getElementById('errorOverlay').classList.remove('is-active')"
-          style="padding: 12px 24px;">Try Again</button>
+      <div class="liquid-card-content">
+        <!-- Animated Status Icon Orb -->
+        <div class="liquid-icon-wrapper liquid-stagger-1">
+          <div class="liquid-icon-pulse"></div>
+          <div class="liquid-icon-pulse-2"></div>
+          <div class="liquid-icon-orb">
+            <svg class="liquid-svg-alert" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <line x1="12" y1="8" x2="12" y2="13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="12" cy="16.5" r="1.25" fill="currentColor"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Status Eyebrow Badge -->
+        <div class="liquid-badge-wrap liquid-stagger-2">
+          <span class="liquid-badge">
+            <span class="liquid-badge-dot"></span>
+            REGISTRATIONS NOT SUBMITTED
+          </span>
+        </div>
+
+        <!-- Title & Description -->
+        <h3 class="liquid-title liquid-stagger-3">Submission Unsuccessful</h3>
+        <p class="liquid-desc liquid-stagger-4">
+          We couldn't save your registration right now. All your entered school and participant details have been preserved. Click Try Again to retry without re-entering anything.
+        </p>
+
+        <!-- Action Buttons: Try Again & Return to Home -->
+        <div class="liquid-actions liquid-stagger-5">
+          <button type="button" class="btn-liquid-primary btn-error-primary" id="btnRetrySubmission">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Try Again</span>
+          </button>
+          <a href="index.html" class="btn-liquid-secondary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Return to Home</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -225,7 +276,7 @@
   <script src="script.js?v=1788550014842"></script>
 
   <!-- Register27 Script -->
-  <script src="register27.js?v=1788632000000"></script>
+  <script src="register27.js?v=1788640000000"></script>
 </body>
 
 </html>

@@ -580,11 +580,8 @@ try {
         btnFinal.textContent = 'Submitted ✓';
         btnFinal.style.background = 'var(--violet)';
 
-        // Open Success Modal
-        const successOverlay = document.getElementById('successOverlay');
-        if (successOverlay) {
-          successOverlay.classList.add('is-active');
-        }
+        // Open Liquid Glass Success Modal
+        openSubmissionModal(document.getElementById('successOverlay'));
       } catch (error) {
         console.error("Submission Error:", error);
 
@@ -594,14 +591,78 @@ try {
         btnFinal.style.background = '';
         btnFinal.style.color = '';
 
-        // Open Error Modal
-        const errorOverlay = document.getElementById('errorOverlay');
-        if (errorOverlay) {
-          errorOverlay.classList.add('is-active');
-        }
+        // Open Liquid Glass Error Modal
+        openSubmissionModal(document.getElementById('errorOverlay'));
       }
     });
   }
+
+  // ---- Liquid Glass Submission Modals Logic & Data Preservation ----
+  function openSubmissionModal(overlayEl) {
+    if (!overlayEl) return;
+    overlayEl.classList.remove('is-closing');
+    overlayEl.classList.add('is-active');
+  }
+
+  function closeSubmissionModal(overlayEl) {
+    if (!overlayEl || !overlayEl.classList.contains('is-active')) return;
+    overlayEl.classList.add('is-closing');
+    setTimeout(() => {
+      overlayEl.classList.remove('is-active', 'is-closing');
+    }, 420);
+  }
+
+  // Hook up "Try Again" button - closes modal and preserves all details
+  const btnRetrySubmission = document.getElementById('btnRetrySubmission');
+  if (btnRetrySubmission) {
+    btnRetrySubmission.addEventListener('click', () => {
+      const errorOverlay = document.getElementById('errorOverlay');
+      closeSubmissionModal(errorOverlay);
+
+      // Re-enable submit button with original text
+      if (btnFinal) {
+        btnFinal.textContent = 'Submit All Registrations';
+        btnFinal.disabled = false;
+        btnFinal.style.background = '';
+        btnFinal.style.color = '';
+      }
+
+      // Re-render UI to verify and display preserved entries
+      renderCards();
+      renderBottomDots();
+      updateBottomBar();
+
+      // Ensure bottom bar remains visible for easy re-submission
+      if (bottomBar) {
+        bottomBar.classList.add('is-visible');
+      }
+    });
+  }
+
+  // Dismiss on backdrop click
+  const submissionSuccessOverlay = document.getElementById('successOverlay');
+  const submissionErrorOverlay = document.getElementById('errorOverlay');
+
+  [submissionSuccessOverlay, submissionErrorOverlay].forEach(modalOverlay => {
+    if (modalOverlay) {
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+          closeSubmissionModal(modalOverlay);
+        }
+      });
+    }
+  });
+
+  // Escape key closes open submission modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (submissionErrorOverlay && submissionErrorOverlay.classList.contains('is-active')) {
+        closeSubmissionModal(submissionErrorOverlay);
+      } else if (submissionSuccessOverlay && submissionSuccessOverlay.classList.contains('is-active')) {
+        closeSubmissionModal(submissionSuccessOverlay);
+      }
+    }
+  });
 
   // ---- Show bottom bar on scroll ----
   const schoolFormEl = document.getElementById('schoolForm');

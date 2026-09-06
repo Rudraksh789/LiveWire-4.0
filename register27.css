@@ -962,3 +962,572 @@
     transform: translateX(0);
   }
 }
+
+/* =========================================================
+   LIVEWIRE 4.0 — LIQUID GLASS SUBMISSION MODALS & HEAVY ANIMATIONS
+   ========================================================= */
+
+/* ---- Deep Dimming Overlay ---- */
+.modal-overlay.submission-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  background: radial-gradient(circle at 50% 45%, rgba(6, 9, 15, 0.94) 0%, rgba(2, 3, 6, 0.98) 100%);
+  backdrop-filter: blur(22px) brightness(0.25) contrast(1.2) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) brightness(0.25) contrast(1.2) saturate(140%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.45s ease;
+}
+
+.modal-overlay.submission-overlay.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-overlay.submission-overlay.is-closing {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- Liquid Glass Card Container ---- */
+.liquid-glass-card {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 28px;
+  padding: 48px 36px 42px;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 26, 38, 0.72) 30%, rgba(10, 14, 20, 0.88) 100%);
+  backdrop-filter: blur(36px) saturate(220%) contrast(108%);
+  -webkit-backdrop-filter: blur(36px) saturate(220%) contrast(108%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 2px 0 0 rgba(255, 255, 255, 0.32) inset,
+    0 35px 80px -15px rgba(0, 0, 0, 0.9),
+    0 0 60px -10px var(--modal-glow, rgba(124, 92, 255, 0.35));
+  transform: perspective(1000px) translateY(50px) scale(0.8) rotateX(12deg);
+  opacity: 0;
+  will-change: transform, opacity, box-shadow;
+}
+
+/* Theme Color Tokens for Cards */
+.liquid-glass-card.success-card {
+  --modal-glow: rgba(34, 229, 168, 0.4);
+  --aura-1: rgba(34, 229, 168, 0.35);
+  --aura-2: rgba(124, 92, 255, 0.32);
+  --aura-3: rgba(0, 229, 255, 0.25);
+  --orb-base: rgba(34, 229, 168, 0.2);
+  --orb-border: rgba(34, 229, 168, 0.6);
+  --orb-glow: rgba(34, 229, 168, 0.45);
+  --orb-svg-color: #22e5a8;
+  --icon-pulse-color: rgba(34, 229, 168, 0.25);
+  --badge-text: #22e5a8;
+  --badge-bg: rgba(34, 229, 168, 0.12);
+  --badge-border: rgba(34, 229, 168, 0.35);
+  --badge-dot: #22e5a8;
+}
+
+.liquid-glass-card.error-card {
+  --modal-glow: rgba(255, 95, 158, 0.45);
+  --aura-1: rgba(255, 95, 158, 0.38);
+  --aura-2: rgba(255, 184, 77, 0.28);
+  --aura-3: rgba(124, 92, 255, 0.28);
+  --orb-base: rgba(255, 95, 158, 0.2);
+  --orb-border: rgba(255, 95, 158, 0.6);
+  --orb-glow: rgba(255, 95, 158, 0.45);
+  --orb-svg-color: #ff5f9e;
+  --icon-pulse-color: rgba(255, 95, 158, 0.25);
+  --badge-text: #ff5f9e;
+  --badge-bg: rgba(255, 95, 158, 0.12);
+  --badge-border: rgba(255, 95, 158, 0.35);
+  --badge-dot: #ff5f9e;
+}
+
+/* Card Entrance & Dynamic Floating Animation */
+.modal-overlay.submission-overlay.is-active .liquid-glass-card {
+  animation: 
+    liquidCardPop 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+    liquidCardFloat 6s ease-in-out 0.8s infinite alternate;
+}
+
+.modal-overlay.submission-overlay.is-closing .liquid-glass-card {
+  transform: perspective(1000px) translateY(35px) scale(0.88) rotateX(-8deg);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 1, 1), opacity 0.3s ease;
+}
+
+@keyframes liquidCardPop {
+  0% {
+    transform: perspective(1000px) translateY(50px) scale(0.8) rotateX(12deg);
+    opacity: 0;
+  }
+  70% {
+    transform: perspective(1000px) translateY(-8px) scale(1.02) rotateX(-2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: perspective(1000px) translateY(0) scale(1) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes liquidCardFloat {
+  0% {
+    transform: perspective(1000px) translateY(0px) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: perspective(1000px) translateY(-8px) rotateX(1deg) rotateY(-0.8deg);
+  }
+  100% {
+    transform: perspective(1000px) translateY(3px) rotateX(-1deg) rotateY(0.8deg);
+  }
+}
+
+/* ---- Ambient Fluid Liquid Aura Behind Glass ---- */
+.liquid-aura {
+  position: absolute;
+  inset: -60px;
+  background: 
+    radial-gradient(circle at 25% 25%, var(--aura-1) 0%, transparent 55%),
+    radial-gradient(circle at 75% 75%, var(--aura-2) 0%, transparent 60%),
+    radial-gradient(circle at 50% 90%, var(--aura-3) 0%, transparent 50%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
+  animation: liquidAuraMorph 8s ease-in-out infinite alternate;
+}
+
+@keyframes liquidAuraMorph {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15) rotate(10deg) translate(10px, -8px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95) rotate(-8deg) translate(-10px, 8px);
+    opacity: 0.85;
+  }
+}
+
+/* ---- Liquid Glass Specular Shimmer Sweep ---- */
+.liquid-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.03) 35%,
+    rgba(255, 255, 255, 0.18) 45%,
+    rgba(255, 255, 255, 0.03) 55%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  animation: liquidShimmerSweep 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes liquidShimmerSweep {
+  0%, 20% {
+    transform: translateX(-100%);
+  }
+  60%, 100% {
+    transform: translateX(120%);
+  }
+}
+
+/* ---- Modal Content Wrapper ---- */
+.liquid-card-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---- Liquid Glass Icon Orb & Concentric Pulsating Rings ---- */
+.liquid-icon-wrapper {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.liquid-icon-pulse,
+.liquid-icon-pulse-2 {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--icon-pulse-color) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.liquid-icon-pulse {
+  animation: shockwavePulse 2.8s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+
+.liquid-icon-pulse-2 {
+  animation: shockwavePulse 2.8s cubic-bezier(0.25, 1, 0.5, 1) 0.9s infinite;
+}
+
+@keyframes shockwavePulse {
+  0% {
+    transform: scale(0.65);
+    opacity: 0.9;
+  }
+  80% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.liquid-icon-orb {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.35) 0%, var(--orb-base) 60%, rgba(10, 14, 20, 0.9) 100%);
+  border: 1.5px solid var(--orb-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 
+    0 12px 30px var(--orb-glow),
+    inset 0 2px 4px rgba(255, 255, 255, 0.6),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  animation: orbBob 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes orbBob {
+  0% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 12px 30px var(--orb-glow), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -3px 8px rgba(0, 0, 0, 0.5);
+  }
+  100% {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 18px 40px var(--orb-glow), inset 0 3px 6px rgba(255, 255, 255, 0.8), inset 0 -3px 8px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* SVG Animations for Icons */
+.liquid-svg-check,
+.liquid-svg-alert {
+  width: 44px;
+  height: 44px;
+  color: var(--orb-svg-color);
+  filter: drop-shadow(0 2px 8px var(--orb-glow));
+}
+
+.check-circle {
+  stroke-dasharray: 63;
+  stroke-dashoffset: 63;
+}
+
+.check-tick {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+}
+
+.modal-overlay.submission-overlay.is-active .check-circle {
+  animation: checkCircleDraw 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+}
+
+.modal-overlay.submission-overlay.is-active .check-tick {
+  animation: checkTickDraw 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards;
+}
+
+@keyframes checkCircleDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes checkTickDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.modal-overlay.submission-overlay.is-active .liquid-svg-alert {
+  animation: alertIconShake 0.65s cubic-bezier(0.36, 0.07, 0.19, 0.97) 0.4s both;
+}
+
+@keyframes alertIconShake {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  20% { transform: scale(1.1) rotate(-8deg); }
+  40% { transform: scale(1.1) rotate(8deg); }
+  60% { transform: scale(1.05) rotate(-4deg); }
+  80% { transform: scale(1.02) rotate(3deg); }
+}
+
+/* ---- Eyebrow Badge ---- */
+.liquid-badge-wrap {
+  margin-bottom: 16px;
+}
+
+.liquid-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--badge-text);
+  background: var(--badge-bg);
+  border: 1px solid var(--badge-border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.liquid-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--badge-dot);
+  box-shadow: 0 0 8px var(--badge-dot);
+  animation: badgeDotPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes badgeDotPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+/* ---- Title & Description ---- */
+.liquid-title {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 14px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.liquid-desc {
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink-mute);
+  max-width: 440px;
+  margin: 0 auto 36px;
+}
+
+/* ---- Action Buttons Container ---- */
+.liquid-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ---- Liquid Glass Buttons & Heavy Animations ---- */
+.btn-liquid-primary,
+.btn-liquid-secondary {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+}
+
+/* Primary Action Button */
+.btn-liquid-primary {
+  padding: 14px 28px;
+  color: #0a0e14;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.btn-liquid-primary.btn-success-primary {
+  background: linear-gradient(135deg, #22e5a8 0%, #17d197 50%, #7c5cff 100%);
+  color: #06150f;
+  box-shadow: 
+    0 10px 25px -4px rgba(34, 229, 168, 0.45),
+    0 0 24px rgba(34, 229, 168, 0.25),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
+}
+
+.btn-liquid-primary.btn-error-primary {
+  background: linear-gradient(135deg, #ff5f9e 0%, #fa478d 50%, #7c5cff 100%);
+  color: #ffffff;
+  box-shadow: 
+    0 10px 25px -4px rgba(255, 95, 158, 0.48),
+    0 0 24px rgba(255, 95, 158, 0.25),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
+}
+
+/* Liquid Shimmer Streak Across Primary Button */
+.btn-liquid-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-25deg);
+  animation: btnLiquidStreak 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes btnLiquidStreak {
+  0%, 35% {
+    left: -130%;
+  }
+  65%, 100% {
+    left: 130%;
+  }
+}
+
+.btn-liquid-primary:hover {
+  transform: translateY(-3px) scale(1.04);
+}
+
+.btn-liquid-primary.btn-success-primary:hover {
+  box-shadow: 
+    0 16px 36px -4px rgba(34, 229, 168, 0.6),
+    0 0 35px rgba(34, 229, 168, 0.45),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.btn-liquid-primary.btn-error-primary:hover {
+  box-shadow: 
+    0 16px 36px -4px rgba(255, 95, 158, 0.6),
+    0 0 35px rgba(255, 95, 158, 0.45),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.btn-liquid-primary:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+/* Secondary Frosted Glass Button */
+.btn-liquid-secondary {
+  padding: 14px 26px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.btn-liquid-secondary:hover {
+  transform: translateY(-3px) scale(1.03);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.38);
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.15);
+}
+
+.btn-liquid-secondary:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.btn-arrow-icon {
+  transition: transform 0.25s ease;
+}
+
+.btn-liquid-primary:hover .btn-arrow-icon {
+  transform: translateX(4px);
+}
+
+/* ---- Staggered Content Reveal Animations ---- */
+.modal-overlay.submission-overlay .liquid-stagger-1,
+.modal-overlay.submission-overlay .liquid-stagger-2,
+.modal-overlay.submission-overlay .liquid-stagger-3,
+.modal-overlay.submission-overlay .liquid-stagger-4,
+.modal-overlay.submission-overlay .liquid-stagger-5 {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.modal-overlay.submission-overlay.is-active .liquid-stagger-1 {
+  animation: staggerReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+}
+
+.modal-overlay.submission-overlay.is-active .liquid-stagger-2 {
+  animation: staggerReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+}
+
+.modal-overlay.submission-overlay.is-active .liquid-stagger-3 {
+  animation: staggerReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+}
+
+.modal-overlay.submission-overlay.is-active .liquid-stagger-4 {
+  animation: staggerReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+}
+
+.modal-overlay.submission-overlay.is-active .liquid-stagger-5 {
+  animation: staggerReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+}
+
+@keyframes staggerReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive tweaks for liquid glass modal */
+@media (max-width: 540px) {
+  .liquid-glass-card {
+    padding: 36px 20px 32px;
+    border-radius: 22px;
+  }
+  .liquid-title {
+    font-size: 24px;
+  }
+  .liquid-desc {
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+  .liquid-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .btn-liquid-primary,
+  .btn-liquid-secondary {
+    width: 100%;
+  }
+}
