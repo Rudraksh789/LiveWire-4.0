@@ -18,7 +18,7 @@ const firebaseConfig = {
 // ============================================================
 // 1. Paste your deployed Apps Script Web App URL below (see setup guide).
 // 2. Set the same secret you used in the Apps Script code.
-const SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyZUp9lzj8WvHJIL8RsHbdYz51P5kHt66aJL9f5d_jDZ6NXGm_kqTAurn-9ZxhLK8-LgQ/exec";
+const SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw41flXCDTII8Lb8G9fW-ay2OxrrZkXnjxozDb8hOqBdxcu-N572hR-XAsOEKfrpQhiFg/exec";
 const SHEETS_SYNC_SECRET = "livewire27";
 let sheetsSyncTimer = null;
 
@@ -31,7 +31,8 @@ function syncToGoogleSheet(data) {
     const rows = data.map(row => [
       row.schoolName, row.schoolEmail, row.teacherName, row.teacherPhone, row.teacherEmail,
       row.event, row.participant, row.pClass, row.section, row.phone, row.email,
-      row.discordId, row.inGameId
+      row.discordId, row.inGameId,
+      row.docId, row.eventId, row.pIndex // hidden columns — used by the Sheets<->Firestore two-way sync. Do not delete these columns.
     ]);
 
     fetch(SHEETS_WEBHOOK_URL, {

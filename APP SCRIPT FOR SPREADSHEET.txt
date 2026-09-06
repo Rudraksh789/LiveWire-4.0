@@ -1,13 +1,29 @@
 APP SCRIPT FOR SPREADSHEET
 
+SECRET = livewire27
 
-DEPLOYMENT ID
+DEPLOYMENT ID (Version 1)
 AKfycbyZUp9lzj8WvHJIL8RsHbdYz51P5kHt66aJL9f5d_jDZ6NXGm_kqTAurn-9ZxhLK8-LgQ
 
+DEPLOYMENT ID (Version 2)
+AKfycbw41flXCDTII8Lb8G9fW-ay2OxrrZkXnjxozDb8hOqBdxcu-N572hR-XAsOEKfrpQhiFg
 
-WEB APP URL
+DEPLOYMENT ID (Version 3)
+AKfycbw41flXCDTII8Lb8G9fW-ay2OxrrZkXnjxozDb8hOqBdxcu-N572hR-XAsOEKfrpQhiFg
+
+
+WEB APP URL (Version 1)
 https://script.google.com/macros/s/AKfycbyZUp9lzj8WvHJIL8RsHbdYz51P5kHt66aJL9f5d_jDZ6NXGm_kqTAurn-9ZxhLK8-LgQ/exec
 
+WEB APP URL (Version 2)
+https://script.google.com/macros/s/AKfycbw41flXCDTII8Lb8G9fW-ay2OxrrZkXnjxozDb8hOqBdxcu-N572hR-XAsOEKfrpQhiFg/exec
+
+WEB APP URL (Version 3)
+https://script.google.com/macros/s/AKfycbw41flXCDTII8Lb8G9fW-ay2OxrrZkXnjxozDb8hOqBdxcu-N572hR-XAsOEKfrpQhiFg/exec
+
+
+LIBRARY (Version 3)
+https://script.google.com/macros/library/d/1prah_SsBbghK7Qa2bNt3QBw8pk6iDF4rJlnztAjpPKzBqoNkNzktlVhm/3
 
 
 EMAIL ID
